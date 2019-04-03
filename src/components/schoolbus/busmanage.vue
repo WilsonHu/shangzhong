@@ -208,12 +208,12 @@
                     </el-col>
                 </el-row>
             </el-form>
-            <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
-                      :title="errorMsg"
-                      type="error"
-                      :closable="false"
-                      show-icon>
-            </el-alert>
+            <!--<el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"-->
+                      <!--:title="errorMsg"-->
+                      <!--type="error"-->
+                      <!--:closable="false"-->
+                      <!--show-icon>-->
+            <!--</el-alert>-->
             <el-row style="margin-bottom: 20px;margin-right: 20px">
                 <el-col :span="2" :offset="19">
                     <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
@@ -303,12 +303,12 @@
                                 </el-col>
                             </el-row>
                         </el-form>
-                        <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
-                                  :title="errorMsg"
-                                  type="error"
-                                  :closable="false"
-                                  show-icon>
-                        </el-alert>
+                        <!--<el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"-->
+                                  <!--:title="errorMsg"-->
+                                  <!--type="error"-->
+                                  <!--:closable="false"-->
+                                  <!--show-icon>-->
+                        <!--</el-alert>-->
                         <el-row style="margin-bottom: 20px;margin-right: 40px">
                             <el-col :span="2" :offset="18">
                                 <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>

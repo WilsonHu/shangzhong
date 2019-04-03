@@ -17,8 +17,8 @@
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
-                        <el-progress type="circle" :percentage="92.5" status="text">
-                            <span style="font-size: 30px;color: #409EFF">921</span>
+                        <el-progress type="circle" :percentage="morningRidingRate" status="text">
+                            <span style="font-size: 30px;color: #409EFF">{{planedStudents - morningAbsentList.length}}</span>
                         </el-progress>
                     </div>
                     <div style="text-align: center;margin-top: 30px">
@@ -31,7 +31,7 @@
                         <el-col :span="8">
                             <div>
 							     <span class="span_number">
-								     1021
+								     {{planedStudents}}
 							     </span>
                                 <br>
                                 <span class="span-normal">
@@ -42,7 +42,7 @@
                         <el-col :span="8">
                             <div>
 							     <span class="span_number">
-								     100
+								     {{morningAbsentList.length}}
 							     </span>
                                 <br>
                                 <span class="span-normal">
@@ -74,7 +74,7 @@
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
                         <el-progress type="circle" :percentage="88" color="#50D166" status="text">
-                            <span style="font-size: 30px;color: #50D166;">899</span>
+                            <span style="font-size: 30px;color: #50D166;">{{planedStudents - afternoonAbsentList.length}}</span>
                         </el-progress>
                     </div>
                     <div style="text-align: center;margin-top: 30px">
@@ -280,6 +280,7 @@
 
 <script>
     var _this;
+    import  request from '../../api/request'
     export default {
         name: "DataBus",
         components: {},
@@ -347,9 +348,14 @@
                             }]
                     }
                 ],
+                planedStudents:0,
+                morningAbsentList:[],
+                afternoonAbsentList:[],
+                afternoonRidingRate:0,
             }
         },
-        watch: {},
+        watch: {
+        },
         methods: {
             handleNodeClick(data) {
                 //只监听班级的点击
@@ -375,13 +381,90 @@
                     })
                 }
             },
+            getPlanedStudents() {
+                let params = new URLSearchParams();
+                request({
+                    url: '/student/totalPlatformNumber',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.planedStudents = res.data.data;
+                    } else {
+                        showMessage(_this,"获取计划乘坐人数失败！");
+                    }
+
+                }).catch(error => {
+                    console.log(error)
+
+                })
+            },
+            getMorningAbsentStudents() {
+                let params = new URLSearchParams();
+                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0,0,0);
+                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59,59,999);
+
+                params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
+                params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
+                params.set("busMode", "早班");
+                request({
+                    url: '/transport/record/selectAbsenceStudentInfo',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.morningAbsentList = res.data.data.list;
+                    } else {
+                        showMessage(_this,"获取早班缺乘人数失败！");
+                    }
+                    _this.loadingUI = false;
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            getAfternoonAbsentStudents() {
+                let params = new URLSearchParams();
+                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0,0,0);
+                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59,59,999);
+
+                params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
+                params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
+                params.set("busMode", "午班");
+                request({
+                    url: '/transport/record/selectAbsenceStudentInfo',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.afternoonAbsentList = res.data.data.list;
+                    } else {
+                        showMessage(_this,"获取早班缺乘人数失败！");
+                    }
+                    _this.loadingUI = false;
+                }).catch(error => {
+                    console.log(error)
+
+                })
+            }
         },
-        computed: {},
+        computed: {
+            morningRidingRate: function(){
+                alert((_this.morningAbsentList.length *100) / _this.planedStudents)
+                return (_this.morningAbsentList.length *100) / _this.planedStudents;
+            }
+        },
 
         filters: {},
 
         created: function () {
-            _this.selectData = new Date();
+            let dt = new Date();
+            let oneDayBefore = new Date();
+            oneDayBefore.setDate(dt.getDate() -1);
+            _this.selectData = oneDayBefore;
+            _this.loadingUI = true;
+            this.getPlanedStudents();
+            this.getMorningAbsentStudents();
+            this.getAfternoonAbsentStudents();
 
         },
         mounted: function () {
