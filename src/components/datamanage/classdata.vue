@@ -1,7 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div style="width: 100%;height: 100%;padding: 24px">
         <el-row style="margin-top: 20px;background: white;min-height: 800px" class="well">
-            <el-col :span="2" class="well" style="background: white;min-height: 750px;overflow-y: auto">
+            <el-col :span="3" class="well" style="background: white;min-height: 750px;overflow-y: auto">
                 <div style="text-align: center">
                     <el-tree :data="classArrays"
                              :props="defaultProps"
@@ -11,7 +11,7 @@
                     </el-tree>
                 </div>
             </el-col>
-            <el-col :span="21" style="background: white;margin-left: 30px;text-align: center">
+            <el-col :span="20" style="background: white;margin-left: 30px;text-align: center">
                 <el-row>
                     <el-col :span="3">
                         <el-date-picker

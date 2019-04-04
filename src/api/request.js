@@ -11,7 +11,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 const service = axios.create({
 	baseURL: HOST, // api的base_url
 	withCredentials: true,               // allow CORS
-	timeout: 5000 // request timeout
+	timeout: 20 * 1000 // request timeout
 })
 
 // request interceptor
@@ -63,7 +63,7 @@ service.interceptors.response.use(
 		Message({
 			message: error.message,
 			type: 'error',
-			duration: 5 * 1000
+			duration: 20 * 1000
 		})
 		return Promise.reject(error)
 	})

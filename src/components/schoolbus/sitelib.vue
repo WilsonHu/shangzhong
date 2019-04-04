@@ -243,6 +243,7 @@
                 addDialogVisible: false,
                 modifyDialogVisible: false,
                 selectedItem: {},
+                formLabelWidth: '100px',
                 form: {
                     stationName:"",
                     gpsInfo:"",

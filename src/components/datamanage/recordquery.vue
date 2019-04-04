@@ -46,7 +46,7 @@
                             <el-option
 		                            v-for="item in gradeList"
 		                            :value="item.name"
-		                            :label="item.name" >
+		                            :label="item.name">
                             </el-option >
                         </el-select >
                     </el-form-item >
@@ -121,7 +121,7 @@
                                      prop="stationName" >
                         <template scope="scope" >
                             <div >
-                                {{scope.row.stationName}}
+                                {{scope.row.studentStationsAfternoon}}
                             </div >
                         </template >
                     </el-table-column >
@@ -201,6 +201,13 @@
 	    methods: {
 		    search() {
 			    _this.loadingUI = true;
+			    if (_this.condition.busNumber==null|| _this.condition.keyWord==null||_this.condition.busStation==null||_this.condition.gradeName==null||_this.condition.className==null){
+			        _this.condition.busNumber="";
+			        _this.condition.keyWord="";
+			        _this.condition.busStation="";
+			        _this.condition.gradeName="";
+			        _this.condition.className="";
+                }
 			    let condition = {
 				    "keyWord": _this.condition.keyWord,
 				    busNumber: _this.condition.busNumber,
@@ -221,6 +228,7 @@
 					    params.append(key, condition[key]);
 				    }
 			    }
+			    alert(params)
 			    request({
 				    url: `${HOST}picked/students/info/selectStudentBus`,
 				    method: 'post',
