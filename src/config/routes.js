@@ -13,6 +13,7 @@ import BusManage from "../components/schoolbus/busmanage.vue"
 import NightWay from "../components/schoolbus/nightway.vue"
 import LineManage from "../components/schoolbus/linemanage.vue"
 import SiteLib from "../components/schoolbus/sitelib.vue"
+import MesManage from '../components/schoolbus/mesmanage.vue'
 
 import Student from "../components/student.vue"
 import StudentMange from "../components/student/studentmange.vue"
@@ -94,6 +95,12 @@ export default
 						component: SiteLib,
 						name: 'SiteLib',
 						meta: '站点库'
+					},
+					{
+						path: '/home/schoolbus/mesmanage',
+						component: MesManage,
+						name: 'MesManage',
+						meta: '消息管理'
 					},
                     {
                         path: '/home/schoolbus/linemamage',

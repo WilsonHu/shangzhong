@@ -206,7 +206,6 @@
                 multipleSelection: [],
                 loadingUI: false,
                 pickerOptions: DateRangeOptions,
-
                 busList: [],
                 busStationList: [],
                 gradeList: [],
@@ -264,9 +263,7 @@
                     method: 'post',
                     data: params
                 }).then(res => {
-                   /* if (_this.tableData!=null&&_this.tableData!=""){
-                        _this.tableData=[];
-                    }*/
+
                     if (res.data.code == 200) {
                         _this.tableData = res.data.data.list;
                         _this.totalRecords = res.data.data.total;

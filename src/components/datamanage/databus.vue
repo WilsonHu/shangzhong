@@ -11,7 +11,8 @@
 
         <el-row style="margin-top: 10px;text-align: center">
             <el-col :span="8">
-                <div  class="well" style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke" >
+                <div class="well"
+                     style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke">
                     <div style="text-align: left;font-weight: bold">
 					     <span class="span-normal">
 					        早班统计
@@ -68,7 +69,8 @@
             </el-col>
 
             <el-col :span="8">
-                <div  class="well" style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke" >
+                <div class="well"
+                     style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke">
                     <div style="text-align: left;font-weight: bold">
 					     <span class="span-normal">
 					        午班统计
@@ -125,7 +127,8 @@
             </el-col>
 
             <el-col :span="8">
-                <div  class="well" style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke" >
+                <div class="well"
+                     style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke">
                     <div style="text-align: left;font-weight: bold">
 					     <span class="span-normal">
 					        晚班统计
@@ -214,9 +217,10 @@
                                 width="75"
                                 label="序号"
                                 align="center">
-                     <template scope="scope">
+                            <template scope="scope">
                                 {{scope.$index+1}}
-                            </template>-->
+                            </template>
+                            -->
                         </el-table-column>
 
                         <el-table-column
@@ -225,15 +229,15 @@
                                 sortable
                                 label="学号">
                         </el-table-column>
-                     <!--   <el-table-column
-                                align="center"
-                                prop="headImg"
-                                label="头像">
-                            <template scope="scope">
-                                <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
-                                    overflow: hidden;" :src="scope.row.photo"/>
-                            </template>
-                        </el-table-column>-->
+                        <!--   <el-table-column
+                                   align="center"
+                                   prop="headImg"
+                                   label="头像">
+                               <template scope="scope">
+                                   <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
+                                       overflow: hidden;" :src="scope.row.photo"/>
+                               </template>
+                           </el-table-column>-->
                         <el-table-column label="姓名"
                                          align="center"
                                          sortable
@@ -275,7 +279,8 @@
 
 <script>
     var _this;
-    import  request from '../../api/request'
+    import request from '../../api/request'
+
     export default {
         name: "DataBus",
         components: {},
@@ -289,77 +294,75 @@
                     children: 'children',
                     label: 'label'
                 },
-                treeData: [
-                ],
-                planedStudents:0,
-                morningAbsentList:[],
-                afternoonAbsentList:[],
-                night:'',
-                absentList:[]
+                treeData: [],
+                planedStudents: 0,
+                morningAbsentList: [],
+                afternoonAbsentList: [],
+                night: '',
+                absentList: []
             }
         },
-        watch: {
-        },
+        watch: {},
         methods: {
             handleNodeClick(data) {
                 var absentList = new Array();
-                var index=0;
+                var index = 0;
                 switch (data.label) {
                     case "早班":
-                            for (var i=0;i<_this.morningAbsentList.length;i++){
-                                if(_this.morningAbsentList[i].busNumber==data.id){
-                                    absentList[index]=_this.morningAbsentList[i];
-                                    index++;
-                                }
+                        for (var i = 0; i < _this.morningAbsentList.length; i++) {
+                            if (_this.morningAbsentList[i].busNumber == data.id) {
+                                absentList[index] = _this.morningAbsentList[i];
+                                index++;
                             }
+                        }
                         break;
                     case "午班":
-                        for (var i=0;i<_this.afternoonAbsentList.length;i++){
-                            if(_this.afternoonAbsentList[i].busNumber==data.id){
-                                absentList[index]=_this.afternoonAbsentList[i];
+                        for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
+                            if (_this.afternoonAbsentList[i].busNumber == data.id) {
+                                absentList[index] = _this.afternoonAbsentList[i];
                                 index++;
                             }
                         }
                         break;
                     default :
-                        for (var i=0;i<_this.morningAbsentList.length;i++){
-                            if(_this.morningAbsentList[i].busNumber==data.id){
-                                absentList[index]=_this.morningAbsentList[i];
+                        for (var i = 0; i < _this.morningAbsentList.length; i++) {
+                            if (_this.morningAbsentList[i].busNumber == data.id) {
+                                absentList[index] = _this.morningAbsentList[i];
                                 index++;
                             }
                         }
-                        for (var i=0;i<_this.afternoonAbsentList.length;i++){
-                            if(_this.afternoonAbsentList[i].busNumber==data.id){
-                                absentList[index]=_this.afternoonAbsentList[i];
+                        for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
+                            if (_this.afternoonAbsentList[i].busNumber == data.id) {
+                                absentList[index] = _this.afternoonAbsentList[i];
                                 index++;
                             }
                         }
                         break;
                 }
                 console.log(index);
-                _this.absentList=absentList;
+                _this.absentList = absentList;
 
-           /*     //只监听班级的点击
-                if(!isUndefined(data.id)) {
-                    let params = new URLSearchParams();
-                    params.append("className",data.label);
-                    request({
-                        url: '/transport/record/selectAbsenceStudentInfo',
-                        method: 'post',
-                        data: params
-                    }).then(res => {
-                        if (res.data.code == 200) {
-                            _this.tableData = res.data.data.list;
-                        } else {
-                            showMessage(_this,"获取数据失败！");
-                        }
-                        _this.loadingUI = false;
-                    }).catch(error => {
-                        console.log(error)
-                        _this.loadingUI = false;
+                /*     //只监听班级的点击
+                     if(!isUndefined(data.id)) {
+                         let params = new URLSearchParams();
+                         params.append("className",data.label);
+                         request({
+                             url: '/transport/record/selectAbsenceStudentInfo',
+                             method: 'post',
+                             data: params
+                         }).then(res => {
+                             if (res.data.code == 200) {
+                                 _this.tableData = res.data.data.list;
+                             } else {
+                                 showMessage(_this,"获取数据失败！");
+                             }
+                             _this.loadingUI = false;
+                         }).catch(error => {
+                             console.log(error)
+                             _this.loadingUI = false;
 
-                    })
-                }*/
+                         })
+                     }*/
             },
             getPlanedStudents() {
                 let params = new URLSearchParams();
@@ -371,7 +374,7 @@
                     if (res.data.code == 200) {
                         _this.planedStudents = res.data.data;
                     } else {
-                        showMessage(_this,"获取计划乘坐人数失败！");
+                        showMessage(_this, "获取计划乘坐人数失败！");
                     }
 
                 }).catch(error => {
@@ -381,8 +384,8 @@
             },
             getMorningAbsentStudents() {
                 let params = new URLSearchParams();
-                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0,0,0);
-                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59,59,999);
+                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
+                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
 
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
@@ -396,7 +399,7 @@
                     if (res.data.code == 200) {
                         _this.morningAbsentList = res.data.data;
                     } else {
-                        showMessage(_this,"获取早班缺乘人数失败！");
+                        showMessage(_this, "获取早班缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
@@ -405,8 +408,8 @@
             },
             getAfternoonAbsentStudents() {
                 let params = new URLSearchParams();
-                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0,0,0);
-                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59,59,999);
+                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
+                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
 
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
@@ -419,17 +422,17 @@
                     if (res.data.code == 200) {
                         _this.afternoonAbsentList = res.data.data;
                     } else {
-                        showMessage(_this,"获取早班缺乘人数失败！");
+                        showMessage(_this, "获取早班缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
                     console.log(error)
                 })
             },
-            getNightStudents(){
+            getNightStudents() {
                 let params = new URLSearchParams();
-                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0,0,0);
-                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59,59,999);
+                let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
+                let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
 
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
@@ -442,62 +445,62 @@
                     if (res.data.code == 200) {
                         _this.night = res.data.data;
                     } else {
-                        showMessage(_this,"获取晚班乘人数失败！");
+                        showMessage(_this, "获取晚班乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
                     console.log(error)
                 })
             },
-            getBusInfo(){
+            getBusInfo() {
                 request({
                     url: '/bus/base/info/list',
                     method: 'post'
                 }).then(res => {
                     var busList = new Array();
                     if (res.data.code == 200) {
-                        busList= res.data.data.list;
+                        busList = res.data.data.list;
 
                         var treeList = new Array();
-                        for(var i=0; i<busList.length;i++){
-                            var tree= new Object();
-                            tree.id=Number(busList[i].number);
-                            tree.label=busList[i].number+"号校车";
+                        for (var i = 0; i < busList.length; i++) {
+                            var tree = new Object();
+                            tree.id = Number(busList[i].number);
+                            tree.label = busList[i].number + "号校车";
 
                             var childrenList = new Array();
-                            var children= new Object();
-                            children.id=Number(busList[i].number);
-                            children.label="早班";
-                            childrenList[0]=children;
-                            var children1= new Object();
-                            children1.id=Number(busList[i].number);
-                            children1.label="午班";
-                            childrenList[1]=children1;
+                            var children = new Object();
+                            children.id = Number(busList[i].number);
+                            children.label = "早班";
+                            childrenList[0] = children;
+                            var children1 = new Object();
+                            children1.id = Number(busList[i].number);
+                            children1.label = "午班";
+                            childrenList[1] = children1;
 
-                            tree.children=childrenList;
-                            treeList[i]=tree;
+                            tree.children = childrenList;
+                            treeList[i] = tree;
                         }
-                        _this.treeData=treeList;
+                        _this.treeData = treeList;
                     } else {
-                        showMessage(_this,"获取获取车辆信息失败！");
+                        showMessage(_this, "获取获取车辆信息失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
                     console.log(error)
                 })
             },
-            selectAbsent(){
+            selectAbsent() {
                 this.getMorningAbsentStudents();
                 this.getAfternoonAbsentStudents();
                 this.getNightStudents();
             }
         },
         computed: {
-            morningRidingRate: function(){
-                return ((_this.planedStudents-_this.morningAbsentList.length) *100) / _this.planedStudents;
+            morningRidingRate: function () {
+                return ((_this.planedStudents - _this.morningAbsentList.length) * 100) / _this.planedStudents;
             },
             afternoonRidingRate: function () {
-                return ((_this.planedStudents-_this.afternoonAbsentList.length) *100) / _this.planedStudents;
+                return ((_this.planedStudents - _this.afternoonAbsentList.length) * 100) / _this.planedStudents;
             }
         },
         filters: {
@@ -512,7 +515,7 @@
         created: function () {
             let dt = new Date();
             let oneDayBefore = new Date();
-            oneDayBefore.setDate(dt.getDate() -1);
+            oneDayBefore.setDate(dt.getDate() - 1);
             _this.selectData = oneDayBefore;
             _this.loadingUI = true;
             this.getPlanedStudents();
