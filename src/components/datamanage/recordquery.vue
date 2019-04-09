@@ -52,7 +52,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4" style="margin-left: 20px">
+                <el-col :span="4" style="margin-left: 20px" v-if="condition.gradeName==''||condition.gradeName==null">
                     <el-form-item label="">
                         <el-select v-model="condition.className" clearable filterable placeholder="请选择班级">
                             <el-option
@@ -63,7 +63,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-               <!-- <el-col :span="4" style="margin-left: 20px" v-else>
+                <el-col :span="4" style="margin-left: 20px" v-else>
                     <el-form-item label="">
                         <el-select v-model="condition.className" clearable filterable placeholder="请选择班级">
                             <el-option
@@ -73,7 +73,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                </el-col>-->
+                </el-col>
                 <el-col :span="4" style="margin-left: 20px">
                     <el-date-picker
                             v-model="condition.selectDate"
@@ -191,7 +191,7 @@
             _this = this;
             return {
                 condition: {
-                    selectDate: '',
+                    selectDate:[new Date(),new Date()],
                     busNumber: '',
                     busStation: '',
                     gradeName: '',
@@ -246,7 +246,6 @@
                     size: _this.pageSize,
                 }
                 if (_this.condition.selectDate != null && _this.condition.selectDate.length > 0) {
-
                     var queryStartTime = _this.condition.selectDate[0].format("yyyy-MM-dd");
                    var queryFinishTime = _this.condition.selectDate[1].format("yyyy-MM-dd");
                     condition.queryStartTime=queryStartTime+" 00:00:00";
@@ -292,7 +291,7 @@
             },
             getClassName(){
               let condition={
-                  grade:_this.condition.gradeName
+                  gradeName:_this.condition.gradeName
               }
               let params=new URLSearchParams();
               if (condition){
@@ -301,13 +300,14 @@
                       params.append(key,condition[key])
                   }
               }
+
               request({
-                  url: `${HOST}banji/getClassName`,
+                  url: `${HOST}banji/getBanjiListByGrade`,
                   method: 'post',
                   data: params
               }).then(res=>{
                   if (res.data.code==200){
-                     _this.classList=res.data.data
+                     _this.classList=res.data.data.list
                   }
               }).catch(error=>{
                   showMessage(_this,'获取班级信息失败',0)
@@ -391,7 +391,7 @@
             _this.search();
 
         },
-        /*watch: {
+        watch: {
             'condition.gradeName': {
                 handler: function () {
                     if (_this.condition.gradeName!=""&&_this.condition.gradeName!=null){
@@ -404,7 +404,7 @@
                 }
 
             }
-        }*/
+        }
     }
 </script>
 <style>
