@@ -3,7 +3,7 @@
         <el-form :model="condition" label-position="right">
             <el-row>
                 <el-col :span="4">
-                    <el-input :span="3" v-model="condition.keyName"
+                    <el-input :span="3" v-model="modifyForm.title"
                               placeholder="请输入标题名称" clearable
                               auto-complete="off"></el-input>
                 </el-col>
@@ -116,14 +116,6 @@
 
         <el-dialog :visible.sync="addDialogVisible" width="50%">
             <el-row>
-                <el-col :span="4">
-                    <el-menu :default-active="activeIndex" style="min-height: 400px">
-                        <el-menu-item index="1">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">发布信息</span>
-                        </el-menu-item>
-                    </el-menu>
-                </el-col>
                 <el-col :span="19" :offset="1">
                     <div v-show="activeIndex == '1'">
                         <h4>发布新消息</h4>
@@ -131,27 +123,27 @@
                             <el-row style="margin-top: 10px">
                                 <el-col :span="5">
                                     <el-form-item label="通知标题：">
-                                        <el-input v-model="addForm.title" style="width: 300%"></el-input>
+                                        <el-input v-model="addForm.title" style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
                                 <el-col :span="5">
                                     <el-form-item label="发布人：">
-                                        <el-input v-model="addForm.name" style="width: 300%"></el-input>
+                                        <el-input v-model="addForm.name" style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                              <el-row>
                                 <el-col :span="5">
                                     <el-form-item label="通知详情：">
-                                        <el-input type="textarea" v-model="addForm.details" rows="5"  style="width: 300%"></el-input>
+                                        <el-input type="textarea" v-model="addForm.details" rows="5"  style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="7">
+                            <el-col :span="10" :offset="7">
                                 <el-button @click="cancel" icon="el-icon-close" type="danger">取 消</el-button>
                                 <el-button type="primary" @click="onAdd" icon="el-icon-check">提交</el-button>
                             </el-col>
@@ -174,31 +166,31 @@
                 <el-col :span="19" :offset="1">
                     <div v-show="activeIndex == '1'">
                         <h4>修改已发布的消息</h4>
-                        <el-form :model="modifyForm" label-position="top" style="margin-left: 150px">
+                        <el-form :model="modifyForm" label-position="top" style="margin-left: 80px">
                             <el-row style="margin-top: 10px">
                                 <el-col :span="5">
                                     <el-form-item label="通知标题：">
-                                        <el-input v-model="modifyForm.title" style="width: 300%"></el-input>
+                                        <el-input v-model="modifyForm.title" style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
                                 <el-col :span="5">
                                     <el-form-item label="发布人：">
-                                        <el-input v-model="modifyForm.name" style="width: 300%"></el-input>
+                                        <el-input v-model="modifyForm.name" style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
                                 <el-col :span="5">
                                     <el-form-item label="通知详情：">
-                                        <el-input type="textarea" v-model="modifyForm.details" rows="5"  style="width: 300%"></el-input>
+                                        <el-input type="textarea" v-model="modifyForm.details" rows="5"  style="width: 400%"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="7">
+                            <el-col :span="10" :offset="7">
                                 <el-button @click="cancel" icon="el-icon-close" type="danger">取 消</el-button>
                                 <el-button type="primary" @click="onEdit" icon="el-icon-check">保存</el-button>
                             </el-col>
@@ -251,6 +243,7 @@
               let condition={
                   page:_this.currentPage,
                   size:_this.pageSize,
+                  title:_this.modifyForm.title
               }
               let params=new URLSearchParams();
               if (condition){
@@ -260,7 +253,7 @@
                   }
               }
               request({
-                  url:`${HOST}messages/list`,
+                  url:`${HOST}messages/getMessages`,
                   method: 'post',
                   data:params
               }).then(res=>{
