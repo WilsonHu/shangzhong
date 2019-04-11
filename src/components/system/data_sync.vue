@@ -62,7 +62,32 @@
                 </el-row>
 
             </el-tab-pane>
-            <el-tab-pane label="校车信息" style="min-height:800px;">
+            <el-tab-pane label="司机照片" style="min-height:800px;">
+                <el-row>
+                    <el-col :span="2">
+                        <el-button type="primary" icon="el-icon-sort" @click="driverPicSync()">同步</el-button>
+                    </el-col>
+                </el-row>
+                <el-row style="margin-top: 20px;margin-left: -25px">
+                    <el-col :span="3" style="text-align: right;font-size: 14px;font-weight: bolder;color: #909399">平台司机数: </el-col>
+                    <el-col :span="1" style="text-align: left;font-size: 20px;font-weight: bolder;color: #1875F0;margin-top: -5px">{{platformDriverNum}}</el-col>
+                    <el-col :span="3" style="text-align: right;font-size: 14px;font-weight: bolder;color: #909399">人像平台司机数：</el-col>
+                    <el-col :span="1" style="text-align: left;font-size: 20px;font-weight: bolder;color: #1875F0;margin-top: -5px">{{facePlatformDriverNum}}</el-col>
+                    <el-col :span="10" style="color:red;font-size:12px;">同步之前请确认司机照片已上传至服务器指定路径</el-col>
+                </el-row>
+                <el-row style="margin-top: 10px"
+                        v-loading="syncLogLoading"
+                        element-loading-text="司机照片同步中"
+                        element-loading-spinner="el-icon-loading">
+                    <el-input
+                            v-loading="loadingUI"
+                            type="textarea"
+                            :rows="30"
+                            placeholder="同步日志输出..."
+                            readonly
+                            v-model="driverPicSyncLog">
+                    </el-input>
+                </el-row>
 
             </el-tab-pane>
         </el-tabs>
@@ -83,10 +108,13 @@
                 activeTab:"2",
                 platformStuNum:0,
                 platformBusMomNum:0,
+                platformDriverNum:0,
                 facePlatformStuNum:0,
                 facePlatformBusMomNum:0,
+                facePlatformDriverNum:0,
                 stuPicSyncLog:"",
                 busMomPicSyncLog:"",
+                driverPicSyncLog:"",
                 syncLogLoading:false,
                 loadingUI:false
             }
@@ -135,6 +163,30 @@
                         _this.busMomPicSyncLog = res.data.data;
                     }
                     _this.getFacePlatformBusMomNum();
+                }).catch(error => {
+                    console.log(error);
+                    _this.loadingUI = false;
+                })
+            },
+            driverPicSync() {
+                _this.loadingUI = true;
+                let params = new URLSearchParams();
+                params.append("userName",_this.userInfo.name);
+                request({
+                    url: "/user/syncDriverPicToFacePlatform",
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        showMessage(_this, '同步Driver照片完成！', 1);
+                    } else {
+                        showMessage(_this, '同步Driver照片失败！', 0);
+                    }
+                    _this.loadingUI = false;
+                    if(res.data.data != null || res.data.data != "") {
+                        _this.driverPicSyncLog = res.data.data;
+                    }
+                    _this.getFacePlatformDriverNum();
                 }).catch(error => {
                     console.log(error);
                     _this.loadingUI = false;
@@ -201,6 +253,37 @@
                 })
             },
 
+            getFacePlatformDriverNum() {
+                let params = new URLSearchParams();
+                request({
+                    url: "/user/totalDriverFaceNumber",
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.facePlatformDriverNum = res.data.data;
+                    }
+
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            getPlatformDriverNum() {
+                let params = new URLSearchParams();
+                request({
+                    url: "/user/totalDriverNumber",
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.platformDriverNum = res.data.data;
+                    }
+
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+
         },
         computed: {
 
@@ -221,7 +304,8 @@
             _this.getFacePlatformStuNum();
             _this.getPlatformBusMomNum();
             _this.getFacePlatformBusMomNum();
-
+            _this.getPlatformDriverNum();
+            _this.getFacePlatformDriverNum();
         }
     }
 </script>
