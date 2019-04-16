@@ -807,14 +807,13 @@
                 if (img == null || img == '') {
                     return require("../../assets/img/avator.png")
                 }
-                //return encodeURI(STUDENT_IMG_BASE + img);
-                return encodeURI(STUDENT_IMG + img);
+                return encodeURI(STUDENT_IMG_BASE + img);
             },
             modifyPhoto(img) {
                 if (_this.photoData !== "") {
                     return _this.photoData;
                 } else {
-                    return encodeURI(STUDENT_IMG + img);
+                    return encodeURI(STUDENT_IMG_BASE + img);
                 }
             },
             fetchStudents() {
