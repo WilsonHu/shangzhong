@@ -308,7 +308,7 @@
                 var absentList = new Array();
                 var index = 0;
                 switch (data.label) {
-                    case "早班":
+                    case "上学":
                         for (var i = 0; i < _this.morningAbsentList.length; i++) {
                             if (_this.morningAbsentList[i].busNumber == data.id) {
                                 absentList[index] = _this.morningAbsentList[i];
@@ -316,7 +316,7 @@
                             }
                         }
                         break;
-                    case "午班":
+                    case "放学":
                         for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
                             if (_this.afternoonAbsentList[i].busNumber == data.id) {
                                 absentList[index] = _this.afternoonAbsentList[i];
@@ -389,7 +389,7 @@
 
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
-                params.set("busMode", "早班");
+                params.set("busMode", "上学");
                 request({
                     url: '/transport/record/selectAbsenceStudentInfo',
                     method: 'post',
@@ -413,7 +413,7 @@
 
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
-                params.set("busMode", "午班");
+                params.set("busMode", "放学");
                 request({
                     url: '/transport/record/selectAbsenceStudentInfo',
                     method: 'post',

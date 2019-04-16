@@ -18,12 +18,11 @@
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
                         style="width: 100%; margin-top: 10px">
-                    <el-table-column
+                    <!--<el-table-column
                             width="75"
                             align="center"
                             type="selection">
-                    </el-table-column>
-
+                    </el-table-column>-->
                     <el-table-column
                             align="center"
                             sortable
@@ -67,10 +66,14 @@
                             label="是否确认"
                             width="150">
                         <template scope="scope">
-                            <el-tag type="success" v-if="scope.row.confirmStatus=='0'"
-                                    @click="updateStu(scope.$index,scope.row)">YES
+                            <el-tag type="success"
+                                    @click="fetchBusLine(scope.$index,scope.row)" v-if="scope.row.confirmStatus=='0'">YES
                             </el-tag>
-                            <el-tag type="danger">NO</el-tag>
+                            <el-tag type="danger" @click="handleCancel(scope.$index,scope.row)"
+                                    v-if="scope.row.confirmStatus=='0'">NO
+                            </el-tag>
+                            <el-tag type="success" v-if="scope.row.confirmStatus=='1'">已修改</el-tag>
+                            <el-tag type="danger" v-if="scope.row.confirmStatus=='2'">已取消修改</el-tag>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -140,42 +143,77 @@
                     _this.loadingUI = false;
                 })
             },
-            handleCurrentChange() {
-
+            handleCurrentChange(val) {
+                _this.currentPage=val;
+                _this.search();
             },
             updateStu(index, data) {
-                _this.fetchBusLine(data.newBusNumber);
                 let params = new URLSearchParams();
-               /* console.log(_this.allBusLine)
-                if (_this.allBusLine != null && _this.busLineTotal > 0) {
-                    let moringLine=_this.allBusLine[0].id
-                   let afternoonLine=_this.allBusLine[1].id
-                    console.log(moringLine+"---"+afternoonLine)
-                }*/
+                let student = {
+                    id: data.student,
+                    boardStationMorning: data.newStation,
+                    boardStationAfternoon: data.newStation,
+                }
+                console.log(_this.allBusLine[0])
+                if (_this.allBusLine != null) {
+                    var morning = _this.allBusLine[0].id
+                    var afternoon = _this.allBusLine[1].id
+                    student.busLineMorning=morning;
+                    student.busLineAfternoon=afternoon
 
-
-                params.append("id",data.student);
-                params.append("boardStationMorning",data.newStation);
-                params.append(" boardStationAfternoon",data.newStation)
-
-               console.log(data.student+"--"+data.newStation+"--"+data.newBusNumber)
-                /*请求学生修改接口时出现403错误。整个请求地址都是对的*/
+                }
+                params.append("student", JSON.stringify(student))
                 request({
-                    url:`${HOST}student/update`,
-                    method:'post',
-                    data:{
-                        student:params
+                    url: '/student/update',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.updateStatus(data.id, "1")
+                        this.$alert('修改成功', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                _this.search();
+                            }
+                        });
+                    } else {
+                        showMessage(_this, "修改失败")
                     }
-                }).then(res=>{
-                    console.log(JSON.stringify(res))
-                }).catch(error=>{
-                    showMessage(_this,error)
+                }).catch(error => {
+                    showMessage(_this, error)
                 })
 
             },
-            fetchBusLine(busNumber) {
+            updateStatus(id, status) {
                 let params = new URLSearchParams();
-                params.append("busNumber", busNumber);
+                params.append("id", id);
+                params.append("confirmStatus", status)
+                request({
+                    url: '/booking/record/update',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        if (status=='2'){
+                            this.$alert('已取消修改', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    _this.search();
+                                }
+                            });
+                        }else {
+                            _this.search()
+                        }
+
+                    }
+                }).catch(error => {
+                    showMessage(_this, error)
+                })
+
+            },
+            fetchBusLine(index, data) {
+                let params = new URLSearchParams();
+                params.append("busNumber", data.newBusNumber);
                 request({
                     url: '/bus/line/getBusLineByBusNumber',
                     method: 'post',
@@ -184,13 +222,17 @@
                     if (res.data.code == 200) {
                         _this.allBusLine = res.data.data.list;
                         _this.busLineTotal = res.data.data.total
+                        _this.updateStu(index,data)
                     } else {
                         showMessage(_this, "获取线路数据失败！");
                     }
                 }).catch(error => {
-                    showMessage(_this,error)
+                    showMessage(_this, error)
                 })
             },
+            handleCancel(index, data) {
+                _this.updateStatus(data.id, "2")
+            }
         },
         computed: {},
 
