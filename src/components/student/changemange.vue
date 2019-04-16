@@ -1,25 +1,14 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div style="width: 100%;height: 100%;padding: 24px">
         <!--<el-row>-->
-            <!--<el-col :span="2">-->
-                <!--<div style="margin: 10px;">-->
-                    <!--<span style="font-weight: 600;color:#5D5D5D;font-size: 15px">变更列表</span >-->
-                <!--</div>-->
-            <!--</el-col >-->
+        <!--<el-col :span="2">-->
+        <!--<div style="margin: 10px;">-->
+        <!--<span style="font-weight: 600;color:#5D5D5D;font-size: 15px">变更列表</span >-->
+        <!--</div>-->
+        <!--</el-col >-->
         <!--</el-row>-->
-        <el-row style="margin-top: 20px;background: white" class="well" >
+        <el-row style="margin-top: 20px;background: white" class="well">
             <el-col :span="23" style="background: white;margin-left: 30px;text-align: center">
-                <el-row>
-                    <el-col :span="1" :offset="20">
-                        <i class="el-icon-plus"></i>
-                    </el-col>
-                    <el-col :span="1">
-                        <i class="el-icon-edit"></i>
-                    </el-col>
-                    <el-col :span="1">
-                        <i class="el-icon-delete"></i>
-                    </el-col>
-                </el-row>
                 <el-table
                         v-loading="loadingUI"
                         element-loading-text="获取数据中..."
@@ -28,151 +17,182 @@
                         highlight-current-row
                         empty-text="暂无数据..."
                         show-overflow-tooltip="true"
-                        style="width: 100%; margin-top: 10px" >
+                        style="width: 100%; margin-top: 10px">
                     <el-table-column
                             width="75"
                             align="center"
                             type="selection">
-                    </el-table-column >
+                    </el-table-column>
 
                     <el-table-column
                             align="center"
                             sortable
-                            label="变更日期" >
-                        <template scope="scope" >
-                            <div >
+                            label="变更日期">
+                        <template scope="scope">
+                            <div>
                                 {{scope.row.changeDate}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="name"
                             width="100"
+                            prop="stuName"
                             label="学生姓名">
-                    </el-table-column >
+                    </el-table-column>
                     <el-table-column
                             label="原校车"
-                             align="center"
-                             prop="originalBus" >
-                    </el-table-column >
+                            align="center"
+                            prop="oldBusNumber">
+
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="currentBus"
-                            label="新校车" >
-                    </el-table-column >
+                            prop="newBusNumber"
+                            label="新校车">
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             width="200"
-                            label="站点" >
-                        <template scope="scope" >
-                            <div >
-                                {{scope.row.busStation}}
-                            </div >
-                        </template >
-                    </el-table-column >
+                            prop="stationName"
+                            label="站点">
+                    </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="content"
-                            label="变更内容" >
-                    </el-table-column >
+                            prop="changeContent"
+                            label="变更内容">
+                    </el-table-column>
                     <el-table-column
                             align="center"
                             label="是否确认"
-                            width="150" >
-                        <template scope="scope" >
-                            <el-tag  type="success" v-if="scope.row.confirmed">YES</el-tag>
-                            <el-tag  type="danger"  v-if="!scope.row.confirmed">NO</el-tag>
-                        </template >
-                    </el-table-column >
-                </el-table >
-                <el-pagination
-                        style="margin-top: 20px"
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage3"
-                        :page-size="8"
-                        layout="prev, pager, next, jumper"
-                        :total="88">
-                </el-pagination>
+                            width="150">
+                        <template scope="scope">
+                            <el-tag type="success" v-if="scope.row.confirmStatus=='0'"
+                                    @click="updateStu(scope.$index,scope.row)">YES
+                            </el-tag>
+                            <el-tag type="danger">NO</el-tag>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block" style="text-align: center; margin-top: 20px">
+                    <el-pagination
+                            background
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-size="pageSize"
+                            layout="total, prev, pager, next, jumper"
+                            :total="totalRecords">
+                    </el-pagination>
+                </div>
             </el-col>
+
         </el-row>
     </div>
 </template>
 
 <script>
     var _this;
+    import {getServerBusList, getServerBusStationList} from '../../api/commonRequest'
+    import request from '../../api/request'
+
     export default {
         name: "ChangeMange",
         components: {},
-        data () {
+        data() {
             _this = this;
             return {
-                tableData: [
-                    {
-                        changeDate:"2019-01-16",
-                        name:"刘德华",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:false
-                    },
-                    {
-                        changeDate:"2019-01-15",
-                        name:"胡通",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:true
-                    },
-                    {
-                        changeDate:"2019-01-10",
-                        name:"刘德华",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:true
-                    },
-                    {
-                        changeDate:"2019-01-10",
-                        name:"刘德华",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:false
-                    },
-                    {
-                        changeDate:"2019-01-10",
-                        name:"刘德华",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:false
-                    },
-                    {
-                        changeDate:"2019-01-10",
-                        name:"刘德华",
-                        originalBus:"1号校车",
-                        currentBus:"2号校车",
-                        busStation:"西藏北路柳营路/西藏北路苏北路",
-                        content:"学生家庭地址变更",
-                        confirmed:false
-                    },
-                ],
+                loadingUI: false,
+                tableData: [],
+                pageSize: EveryPageNum,
+                currentPage: 1,
+                startRow: 0,
+                totalRecords: 0,
+                studentName: [],
+                busLine: [],
+                busNumber: [],
+                allBusLine: [],
+                busLineTotal: ''
+
+
             }
         },
         methods: {
+            search() {
+                _this.loadingUI = true;
+                let params = new URLSearchParams();
+                params.append("page", _this.currentPage);
+                params.append("size", _this.pageSize);
+                request({
+                    url: `${HOST}booking/record/getBookingRecord`,
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.tableData = res.data.data.list;
+                        _this.totalRecords = res.data.data.total;
+                        _this.startRow = res.data.data.startRow;
+                    } else {
+                        showMessage(_this, "获取变更信息失败")
+                    }
+                    _this.loadingUI = false
+                }).catch(error => {
+                    console.log(error)
+                    _this.loadingUI = false;
+                })
+            },
+            handleCurrentChange() {
 
-        },
-        computed: {
+            },
+            updateStu(index, data) {
+                _this.fetchBusLine(data.newBusNumber);
+                let params = new URLSearchParams();
+               /* console.log(_this.allBusLine)
+                if (_this.allBusLine != null && _this.busLineTotal > 0) {
+                    let moringLine=_this.allBusLine[0].id
+                   let afternoonLine=_this.allBusLine[1].id
+                    console.log(moringLine+"---"+afternoonLine)
+                }*/
 
+
+                params.append("id",data.student);
+                params.append("boardStationMorning",data.newStation);
+                params.append(" boardStationAfternoon",data.newStation)
+
+               console.log(data.student+"--"+data.newStation+"--"+data.newBusNumber)
+                /*请求学生修改接口时出现403错误。整个请求地址都是对的*/
+                request({
+                    url:`${HOST}student/update`,
+                    method:'post',
+                    data:{
+                        student:params
+                    }
+                }).then(res=>{
+                    console.log(JSON.stringify(res))
+                }).catch(error=>{
+                    showMessage(_this,error)
+                })
+
+            },
+            fetchBusLine(busNumber) {
+                let params = new URLSearchParams();
+                params.append("busNumber", busNumber);
+                request({
+                    url: '/bus/line/getBusLineByBusNumber',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.allBusLine = res.data.data.list;
+                        _this.busLineTotal = res.data.data.total
+                    } else {
+                        showMessage(_this, "获取线路数据失败！");
+                    }
+                }).catch(error => {
+                    showMessage(_this,error)
+                })
+            },
         },
+        computed: {},
 
         filters: {},
 
@@ -181,6 +201,7 @@
 
         },
         mounted: function () {
+            _this.search();
         }
     }
 </script>
