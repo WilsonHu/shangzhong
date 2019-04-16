@@ -813,7 +813,7 @@
                 if (_this.photoData !== "") {
                     return _this.photoData;
                 } else {
-                    return encodeURI(STUDENT_IMG + img);
+                    return encodeURI(STUDENT_IMG_BASE + img);
                 }
             },
             fetchStudents() {
