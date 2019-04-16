@@ -83,7 +83,7 @@
                         width="100"
                         align="center"
                         prop="mode"
-                        label="早午班" >
+                        label="上放学" >
                 </el-table-column >
                 <el-table-column
                         align="center"
@@ -135,7 +135,7 @@
                         </el-form-item>
                     </el-col >
                     <el-col :span="8" >
-                        <el-form-item label="早/午班："  :label-width="formLabelWidth">
+                        <el-form-item label="上学/放学："  :label-width="formLabelWidth">
                             <el-select v-model="form.mode">
                                 <el-option
                                         v-for="item in modeList"
@@ -220,7 +220,7 @@
                         </el-form-item>
                     </el-col >
                     <el-col :span="8" >
-                        <el-form-item label="早/午班："  :label-width="formLabelWidth">
+                        <el-form-item label="上学/放学："  :label-width="formLabelWidth">
                             <el-select v-model="editForm.mode">
                                 <el-option
                                         v-for="item in modeList"
@@ -345,7 +345,7 @@
                 busList:[],
                 addConfirmDialog: false,
                 formLabelWidth: '100px',
-                modeList:["早班","午班"],
+                modeList:["上学","放学"],
                 stationList:[],
                 currentDeleteLine:{},
                 editConfirmDialog: false,
@@ -377,7 +377,7 @@
                 } else if(this.editForm.busBaseInfo == null || this.editForm.busBaseInfo === "") {
                     showMessage(_this,"校车名不能为空！");
                 } else if(this.editForm.mode == null  || this.editForm.mode === "") {
-                    showMessage(_this,"早午班不能为空！");
+                    showMessage(_this,"上放学不能为空！");
                 } else if(this.editForm.stations == null  || this.editForm.stations.length === 0) {
                     showMessage(_this,"站点不能为空！");
                 } else {
@@ -432,7 +432,7 @@
                 } else if(this.form.busBaseInfo == null || this.form.busBaseInfo === "") {
                     showMessage(_this,"校车名不能为空！");
                 } else if(this.form.mode == null  || this.form.mode === "") {
-                    showMessage(_this,"早午班不能为空！");
+                    showMessage(_this,"上放学不能为空！");
                 } else if(this.form.stations == null  || this.form.stations.length === 0) {
                     showMessage(_this,"站点不能为空！");
                 } else {

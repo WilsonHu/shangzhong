@@ -96,7 +96,7 @@
                             align="center"
                             prop="busRangeName"
                             sortable
-                            label="早/午区间" >
+                            label="上学/放学区间" >
                         <template scope="scope" >
                             <div >
                                 {{scope.row.busLineName}}
@@ -320,7 +320,7 @@
                     </div>
                     <div v-show="activeIndex == '2'">
                         <el-tabs type="border-card">
-                            <el-tab-pane label="早班站点">
+                            <el-tab-pane label="上学站点">
                                 <el-table
                                     :data="morningLineStations"
                                     border
@@ -344,7 +344,7 @@
                                     </el-table-column>
                                 </el-table>
                             </el-tab-pane>
-                            <el-tab-pane label="午班站点">
+                            <el-tab-pane label="放学站点">
                                 <el-table
                                         :data="afternoonLineStations"
                                         border
@@ -679,13 +679,13 @@
                         let lineLists = res.data.data.list;
                         for (let i = 0; i < lineLists.length; i++) {
                             if(lineLists[i].stations != "") {
-                                if(lineLists[i].mode === "早班") {
+                                if(lineLists[i].mode === "上学") {
                                     let stations = lineLists[i].stations.split(",");
                                     for (let j = 0; j < stations.length; j++) {
                                         _this.morningLineStations.push({"station":stations[j]});
                                     }
                                 }
-                                if(lineLists[i].mode === "午班") {
+                                if(lineLists[i].mode === "放学") {
                                     let stations = lineLists[i].stations.split(",");
                                     for (let j = 0; j < stations.length; j++) {
                                         _this.afternoonLineStations.push({"station":stations[j]});

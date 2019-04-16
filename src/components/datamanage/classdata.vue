@@ -97,7 +97,7 @@
                     <el-table-column
                             align="center"
                             width="150"
-                            label="上午">
+                            label="上学">
                         <template scope="scope">
 
                             <el-tag type="success" v-if="scope.row.morningAttendance">上车</el-tag>
@@ -108,7 +108,7 @@
                     <el-table-column
                             align="center"
                             width="150"
-                            label="中午">
+                            label="放学">
                         <template scope="scope">
                             <el-tag type="success" v-if="scope.row.afterAttendance">上车</el-tag>
                             <el-tag type="warning" v-else>缺乘</el-tag>
