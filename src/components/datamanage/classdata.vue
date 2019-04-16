@@ -46,7 +46,7 @@
                             label="序号"
                             align="center">
                         <template scope="scope">
-                            {{scope.$index}}
+                            {{scope.$index+1}}
                         </template>
                     </el-table-column>
 
@@ -114,7 +114,15 @@
                             <el-tag type="warning" v-else>缺乘</el-tag>
                         </template>
                     </el-table-column>
-
+                    <el-table-column
+                            align="center"
+                            width="150"
+                            label="晚班">
+                        <template scope="scope">
+                            <el-tag type="success" v-if="scope.row.nightAttendance">上车</el-tag>
+                            <el-tag type="warning" v-else>缺乘</el-tag>
+                        </template>
+                    </el-table-column>
                 </el-table>
 
             </el-col>
@@ -272,7 +280,6 @@
             },
             handleNodeClick(data) {
                 _this.currentGrade = data;
-                alert(_this.currentGrade.label);
                 if (_this.userInfo.roleId == 4) {
                     if (_this.currentGrade.label.indexOf('年级') == -1) {
                         _this.fetchStudents();
