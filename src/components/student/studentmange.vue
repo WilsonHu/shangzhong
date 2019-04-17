@@ -234,7 +234,7 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="8" :offset="1">
-                                    <el-form-item label="早班接送点：">
+                                    <el-form-item label="上学接送点：">
                                         <el-select v-model="modifyForm.boardStationMorning" clearable>
                                             <el-option
                                                     v-for="item in busStations"
@@ -245,7 +245,7 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="8" :offset="1">
-                                    <el-form-item label="午班下车点：">
+                                    <el-form-item label="放学下车点：">
                                         <el-select v-model="modifyForm.boardStationAfternoon" clearable>
                                             <el-option
                                                     v-for="item in busStations"
@@ -374,7 +374,7 @@
                             </el-row>
                             <el-row>
                                 <el-col :span="10">
-                                    <el-form-item label="早班接送点：">
+                                    <el-form-item label="上学接送点：">
                                         <el-select v-model="form.boardStationMorning" clearable style="width: 140%">
                                             <el-option
                                                     v-for="item in busStations"
@@ -387,7 +387,7 @@
                             </el-row>
                             <el-row>
                                 <el-col :span="10">
-                                    <el-form-item label="午班下车点：">
+                                    <el-form-item label="放学下车点：">
                                         <el-select v-model="form.boardStationAfternoon" clearable style="width: 140%">
                                             <el-option
                                                     v-for="item in busStations"
@@ -476,7 +476,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8" :offset="1">
-                                <el-form-item label="早班接送点：">
+                                <el-form-item label="上学接送点：">
                                     <el-select v-model="form.boardStationMorning" clearable>
                                         <el-option
                                                 v-for="item in busStations"
@@ -487,7 +487,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8" :offset="1">
-                                <el-form-item label="午班下车点：">
+                                <el-form-item label="放学下车点：">
                                     <el-select v-model="form.boardStationAfternoon" clearable>
                                         <el-option
                                                 v-for="item in busStations"
@@ -551,7 +551,7 @@
                         </el-row>
                         <el-row style="margin-top: 10px">
                             <el-col :span="15">
-                                <el-form-item label="早上午下新站点：">
+                                <el-form-item label="新站点：">
                                     <el-input v-model="changeForm.stationName"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -1079,8 +1079,8 @@
                 if (_this.verifyForm(_this.form)) {
                     let params = new URLSearchParams();
                     let paramObj = copyObjectByJSON(_this.form);
-                    paramObj.busLineMorning = _this.filterBusLineByBus("早班");
-                    paramObj.busLineAfternoon = _this.filterBusLineByBus("午班");
+                    paramObj.busLineMorning = _this.filterBusLineByBus("上学");
+                    paramObj.busLineAfternoon = _this.filterBusLineByBus("放学");
                     params.append("student", JSON.stringify(paramObj));
                     params.append("photoData", _this.photoData);
                     request({
@@ -1117,15 +1117,15 @@
                 } else if (formObj.boardStationMorning == null
                     || formObj.boardStationMorning == ""
                     || formObj.boardStationMorning == 0) {
-                    showMessage(_this, "早班站点不能为空！");
+                    showMessage(_this, "上学站点不能为空！");
                     result = false;
                 } else if (formObj.boardStationAfternoon == null
                     || formObj.boardStationAfternoon == ""
                     || formObj.boardStationAfternoon == 0) {
-                    showMessage(_this, "午班站点不能为空！");
+                    showMessage(_this, "放学站点不能为空！");
                     result = false;
                 } else if (formObj.boardStationAfternoon != formObj.boardStationMorning) {
-                    showMessage(_this, "早班站点和午班站点不一致！");
+                    showMessage(_this, "上学站点和放学站点不一致！");
                     result = false;
                 }
                 return result;

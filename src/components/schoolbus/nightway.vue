@@ -339,7 +339,7 @@
                 // busList:[],
                 addConfirmDialog: false,
                 formLabelWidth: '100px',
-                // modeList:["早班","午班"],
+                // modeList:["上学","放学"],
                 // stationList:[],
                 currentDeleteLine:{
                     id:"",
