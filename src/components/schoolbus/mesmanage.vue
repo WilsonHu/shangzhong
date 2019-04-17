@@ -3,7 +3,7 @@
         <el-form :model="condition" label-position="right">
             <el-row>
                 <el-col :span="4">
-                    <el-input :span="3" v-model="modifyForm.title"
+                    <el-input :span="3" v-model="condition.title"
                               placeholder="请输入标题名称" clearable
                               auto-complete="off"></el-input>
                 </el-col>
@@ -144,9 +144,9 @@
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="7">
+                            <el-col :span="15" :offset="8">
                                 <el-button @click="cancel" icon="el-icon-close" type="danger">取 消</el-button>
-                                <el-button type="primary" @click="onAdd" icon="el-icon-check">提交</el-button>
+                                <el-button type="primary" @click="onAdd" icon="el-icon-check" style="margin-left: 100px">提交</el-button>
                             </el-col>
                         </el-row>
                     </div>
@@ -155,19 +155,10 @@
         </el-dialog>
         <el-dialog :visible.sync="modifyDialogVisible" width="50%">
             <el-row>
-                <el-col :span="4">
-                    <el-menu :default-active="activeIndex" style="min-height: 400px">
-                        <el-menu-item index="1">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">修改信息</span>
-                        </el-menu-item>
-                    </el-menu>
-                </el-col>
-
                 <el-col :span="19" :offset="1">
                     <div v-show="activeIndex == '1'">
                         <h4>修改已发布的消息</h4>
-                        <el-form :model="modifyForm" label-position="top" style="margin-left: 100px">
+                        <el-form :model="modifyForm" label-position="top" style="margin-left: 150px">
                             <el-row style="margin-top: 10px">
                                 <el-col :span="20">
                                     <el-form-item label="通知标题：">
@@ -191,9 +182,9 @@
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="7">
+                            <el-col :span="15" :offset="7">
                                 <el-button @click="cancel" icon="el-icon-close" type="danger">取 消</el-button>
-                                <el-button type="primary" @click="onEdit" icon="el-icon-check">保存</el-button>
+                                <el-button type="primary" @click="onEdit" icon="el-icon-check" style="margin-left: 150px">保存</el-button>
                             </el-col>
                         </el-row>
                     </div>
@@ -215,7 +206,7 @@
             _this = this;
             return {
                 condition: {
-                    keyName: ''
+                    title: ''
                 },
                 pageSize: EveryPageNum,//每一页的num
                 currentPage: 1,
@@ -244,7 +235,7 @@
               let condition={
                   page:_this.currentPage,
                   size:_this.pageSize,
-                  title:_this.modifyForm.title
+                  title:_this.condition.title
               }
               let params=new URLSearchParams();
               if (condition){
@@ -262,7 +253,6 @@
                        _this.tableData=res.data.data.list;
                        _this.totalRecords=res.data.data.total;
                        _this.startRow=res.data.data.startRow;
-                       console.log(_this.totalRecords)
 
                    } else{
                        showMessage(_this,"获取推送信息失败",0)
@@ -294,7 +284,8 @@
 
             handleDelete(index, data){
                 let params=new URLSearchParams();
-                params.append("id",index);
+                console.log(data.id)
+                params.append("id",data.id);
                 request({
                     url:`${HOST}messages/delete`,
                     method:'post',

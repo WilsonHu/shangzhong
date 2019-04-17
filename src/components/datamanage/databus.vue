@@ -20,7 +20,7 @@
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
-                        <el-progress type="circle" :percentage="morningRidingRate" status="text">
+                        <el-progress type="circle" :percentage="morning" status="text">
                             <span style="font-size: 30px;color: #409EFF">{{planedStudents - morningAbsentList.length}}</span>
                         </el-progress>
                     </div>
@@ -56,7 +56,7 @@
                         <el-col :span="8">
                             <div>
 							     <span class="span_number">
-								     {{ morningRidingRate | numFilter}}%
+								     {{morning}}%
 							     </span>
                                 <br>
                                 <span class="span-normal">
@@ -78,7 +78,7 @@
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
-                        <el-progress type="circle" :percentage="afternoonRidingRate" color="#50D166" status="text">
+                        <el-progress type="circle" :percentage="afternoon" color="#50D166" status="text">
                             <span style="font-size: 30px;color: #50D166;">{{planedStudents - afternoonAbsentList.length}}</span>
                         </el-progress>
                     </div>
@@ -114,7 +114,7 @@
                         <el-col :span="8">
                             <div>
 							     <span class="span_number">
-								     {{ afternoonRidingRate | numFilter}}%
+								     {{ afternoon}}%
 							     </span>
                                 <br>
                                 <span class="span-normal">
@@ -287,7 +287,7 @@
         data() {
             _this = this;
             return {
-                selectData: '',
+                selectData: new Date(),
                 loadingUI: false,
                 tableData: [],
                 defaultProps: {
@@ -299,7 +299,9 @@
                 morningAbsentList: [],
                 afternoonAbsentList: [],
                 night: '',
-                absentList: []
+                absentList: [],
+                morning:100,
+                afternoon:100
             }
         },
         watch: {},
@@ -383,6 +385,7 @@
                 })
             },
             getMorningAbsentStudents() {
+
                 let params = new URLSearchParams();
                 let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
                 let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
@@ -398,6 +401,13 @@
 
                     if (res.data.code == 200) {
                         _this.morningAbsentList = res.data.data;
+                        if (_this.morningAbsentList.length>0) {
+                            var num = (_this.morningAbsentList.length / _this.planedStudents)
+                            var morningNum = (1 - num) * 100;
+                            _this.morning = morningNum
+                        }else{
+                            _this.morning=100
+                        }
                     } else {
                         showMessage(_this, "获取早班缺乘人数失败！");
                     }
@@ -407,6 +417,7 @@
                 })
             },
             getAfternoonAbsentStudents() {
+
                 let params = new URLSearchParams();
                 let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
                 let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
@@ -421,8 +432,16 @@
                 }).then(res => {
                     if (res.data.code == 200) {
                         _this.afternoonAbsentList = res.data.data;
+                          if (_this.afternoonAbsentList.length>0){
+                              var num = (_this.afternoonAbsentList.length / _this.planedStudents)
+                              var morningNum = (1 - num) * 100;
+                              _this.afternoon = morningNum
+                          } else {
+                              _this.afternoon=100
+                          }
+
                     } else {
-                        showMessage(_this, "获取早班缺乘人数失败！");
+                        showMessage(_this, "获取午班缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
@@ -495,14 +514,14 @@
                 this.getNightStudents();
             }
         },
-        computed: {
+       /* computed: {
             morningRidingRate: function () {
                 return ((_this.planedStudents - _this.morningAbsentList.length) * 100) / _this.planedStudents;
             },
             afternoonRidingRate: function () {
                 return ((_this.planedStudents - _this.afternoonAbsentList.length) * 100) / _this.planedStudents;
             }
-        },
+        },*/
         filters: {
             numFilter(value) {
                 // 截取当前数据到小数点后两位
@@ -513,18 +532,16 @@
             }
         },
         created: function () {
-            let dt = new Date();
-            let oneDayBefore = new Date();
-            oneDayBefore.setDate(dt.getDate() - 1);
-            _this.selectData = oneDayBefore;
-            _this.loadingUI = true;
-            this.getPlanedStudents();
-            this.getMorningAbsentStudents();
-            this.getAfternoonAbsentStudents();
-            this.getNightStudents();
-            this.getBusInfo();
+
+
         },
         mounted: function () {
+            _this.loadingUI = true;
+            _this.getPlanedStudents();
+            _this.getMorningAbsentStudents();
+            _this.getAfternoonAbsentStudents();
+            _this.getNightStudents();
+            _this.getBusInfo();
         }
     }
 </script>

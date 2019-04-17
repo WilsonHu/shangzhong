@@ -125,9 +125,48 @@
             window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
-                this.ruleForm2.account = user.account;
+                _this.$router.push("/home");
             }
+            let url=window.location.href;
+            console.log(url);
+            let mark1= url.indexOf('?');
 
+            if(mark1!=-1) {
+                let mark2= url.indexOf('#');
+                let params;
+                if (mark2 != -1) {
+                    params = url.slice(url.indexOf('?') + 1, mark2);
+                } else {
+                    params = url.slice(url.indexOf('?') + 1);
+                }
+                let mark3= url.indexOf('=');
+                console.log(params);
+                let ticket = params.slice(mark3+1);
+                console.log(ticket);
+                $.ajax({
+                    url: HOST + "CAS/demo",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        "ticket":ticket
+                    },
+                    success: function (data) {
+                        if(data.code==200){
+                            sessionStorage.setItem('user', JSON.stringify(data.data));//res.data
+                            //setToken(JSON.stringify(res.data.data))
+                            _this.$router.push("/home");
+                        }else{
+                            console.log("获取登陆用户数据失败！")
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        showMessage(_this, error, 0);
+                    }
+                });
+            }else {
+                window.location.href="http://127.0.0.1:9090"
+            }
         },
         destroyed: function () {
             console.log("destroyed vue");

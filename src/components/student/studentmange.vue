@@ -151,7 +151,7 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <el-dialog :visible.sync="modifyDialogVisible" width="65%">
+        <el-dialog :visible.sync="modifyDialogVisible" width="55%">
             <el-row>
                 <el-col :span="4">
                     <el-menu :default-active="activeIndex" style="min-height: 400px" @select="handleStuSelect">
@@ -268,6 +268,56 @@
                 </el-col>
 
                 <el-col :span="19" :offset="1">
+                    <div v-show="activeIndex == '2'">
+                        <h4>关联人员</h4>
+                        <el-form :model="associated" label-position="top" style="margin-left: 50px">
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="7">
+                                    <el-form-item label="BUS妈妈：">
+                                        <el-input v-model="associated.busMomName"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="7" :offset="1">
+                                    <el-form-item label="联系方式：">
+                                        <el-input v-model="associated.busMomPhone"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="7">
+                                    <el-form-item label="班主任：">
+                                        <el-input v-model="associated.teacherName"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="7" :offset="1">
+                                    <el-form-item label="联系方式：">
+                                        <el-input v-model="associated.teacherPhone"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="7">
+                                    <el-form-item label="监护人1：">
+                                        <el-input v-model="associated.family"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="7" :offset="1">
+                                    <el-form-item label="联系方式：">
+                                        <el-input v-model="associated.familyPhone"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </el-form>
+                        <el-row style="margin-top: 20px">
+                            <el-col :span="13" :offset="2">
+                                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
+                                <el-button type="primary" @click="chanageAss" icon="el-icon-check" style="margin-left: 150px">保存修改</el-button>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-col>
+
+                <el-col :span="19" :offset="1">
                     <div v-show="activeIndex == '3'">
                         <h4>预约变更</h4>
                         <el-form :model="modifyForm" label-position="top">
@@ -350,10 +400,10 @@
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="17">
-                                <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消
+                            <el-col :span="15" :offset="2">
+                                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消
                                 </el-button>
-                                <el-button type="primary" @click="changeContent" icon="el-icon-check">提 交</el-button>
+                                <el-button type="primary" @click="changeContent" icon="el-icon-check" style="margin-left: 150px">提 交</el-button>
                             </el-col>
                         </el-row>
                     </div>
@@ -565,6 +615,12 @@
                     details: ''
 
                 },
+                associated: {
+                    family: '',
+                    familyPhone: '',
+                    busMomName: '',
+                    busMomPhone: '',
+                },
                 form: {
                     headImg: "",
                     studentNumber: "",
@@ -586,6 +642,9 @@
                 fileList: [],
                 photoData: "",
                 deleteItem: "",
+                teacher: [],
+                busMom: []
+
             }
         },
         methods: {
@@ -681,11 +740,6 @@
                     createTime: new Date(),
                     updateTime: new Date()
                 }
-                console.log(_this.changeForm.changeTime + "---" + _this.modifyForm.id)
-                console.log(_this.form.boardStationAfternoon + "---" + _this.changeForm.details)
-                console.log(changeForm.createTime+"----"+changeForm.updateTime)
-                console.log(changeForm.oldBusLine+"---"+changeForm.newBusLine)
-
                 let params = new URLSearchParams();
                 if (changeForm) {
                     let keys = Object.keys(changeForm)
@@ -715,8 +769,80 @@
             },
             handleStuSelect(index) {
                 _this.activeIndex = index;
+                if (index == 2) {
+                    _this.fetchBusMom(_this.modifyForm.busNumber)
+                    _this.associated.busMomName = _this.busMom[0].busMomName
+                    _this.fetchUser(_this.busMom[0].busMom)
+                }
             },
+            chanageAss(){
+                 /*问题:老师id没有，无法在前端进行修改。现在在前端修改的是busMom和学生的监护人信息*/
+              // _this.chanageTeacher();
+               _this.chanageStu(_this.modifyForm.id);
+                let params=new URLSearchParams();
+                let user={
+                    id:_this.busMom[0].busMom,
+                    name:_this.associated.busMomName,
+                    account:_this.associated.busMomName,
+                    phone:_this.associated.busMomPhone
+                }
+                params.append("user",user)
+                request({
+                    url:'ssss/user/update',
+                    method:'post',
+                    data:params
+                }).then(res=>{
+                    if (res.data.code==200){
+                        _this.$alert('修改成功', '提示', {
+                            confirmButtonText: '确定',
+                        })
+                    }
+                }).catch(error=>{
+                    showMessage(_this,"修改关联人员信息失败")
+                })
+            },
+            chanageTeacher(teacherId){
+                console.log(_this.associated.busMomName+"-----"+_this.associated.busMomPhone)
+                let params=new URLSearchParams();
+                let user={
+                    id:teacherId,
+                    name:_this.associated.teacherName,
+                    account:_this.associated.teacherName,
+                    phone:_this.associated.teacherPhone
+                }
+                params.append("user",user)
+                request({
+                    url:'/user/update',
+                    method:'post',
+                    data:params
+                }).then(res=>{
+                    if (res.data.code==200){
+                        _this.$alert('修改成功', '提示', {
+                            confirmButtonText: '确定',
+                        })
+                    }
+                }).catch(error=>{
+                    showMessage(_this,"修改关联人员信息失败")
+                })
+            },
+            chanageStu(stuId){
+                let params=new URLSearchParams();
+                let student={
+                    id:stuId,
+                    familyInfo:{"监护人":_this.associated.family,"联系电话":_this.associated.familyPhone}
+                }
+                params.append("student",student);
+                request({
+                    url:'/student/update',
+                    method:'post',
+                    data:params
+                }).then(res=>{
 
+                }).catch(error=>{
+                    showMessage(_this,"修改关联人员中监护人失败")
+                })
+
+            },
             handleSizeChange(val) {
 
             },
@@ -782,20 +908,20 @@
                 })
             },
             getBusList() {
-                    let params = new URLSearchParams();
-                    request({
-                        url: '/bus/base/info/list',
-                        method: 'post',
-                        data: params
-                    }).then(res => {
-                        if (res.data.code == 200) {
-                            _this.busList = res.data.data.list;
-                        } else {
-                            showMessage(_this, "获取数据失败！");
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
+                let params = new URLSearchParams();
+                request({
+                    url: '/bus/base/info/list',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.busList = res.data.data.list;
+                    } else {
+                        showMessage(_this, "获取数据失败！");
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
             },
             handleNodeClick(data) {
                 _this.currentGrade = data;
@@ -901,6 +1027,26 @@
                 _this.activeIndex = "1";
                 _this.fileList = [];
                 _this.fetchBusLine(_this.modifyForm.busNumber);
+                _this.busMom = [];
+                _this.fetchBusMom(_this.modifyForm.busNumber)
+                let familyInfo = data.familyInfo;
+                if (familyInfo != null) {
+                    if (familyInfo.length < 20) {
+                        _this.associated.family = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf("}")).replace(/\"/g, "")
+                    } else {
+                        _this.associated.familyPhone = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf(",")).replace(/\"/g, "")
+                        _this.associated.family = familyInfo.substring(familyInfo.indexOf(",") + 7, familyInfo.indexOf("}")).replace(/\"/g, "")
+
+                    }
+                }
+
+                for (var i = 0; i < _this.classArrays.length; i++) {
+                    for (var k = 0; k < _this.classArrays[i].classes.length; k++) {
+                        if (data.banjiName == _this.classArrays[i].classes[k].label) {
+                            _this.fetchTeacher(_this.classArrays[i].grade_id,data.banjiName)
+                        }
+                    }
+                }
             },
             onEdit() {
                 if (_this.verifyForm(_this.modifyForm)) {
@@ -993,6 +1139,55 @@
                     }
                 }
                 return result;
+            },
+            fetchTeacher(gradeName, className) {
+                let params = new URLSearchParams();
+                params.append("gradeName", gradeName);
+                params.append("banjiName", className);
+                request({
+                    url: '/banji/getTheChargeTeacher',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.teacher = res.data.data
+                        _this.associated.teacherName=_this.teacher.username
+                        _this.associated.teacherPhone=_this.teacher.phone
+                    }
+                }).catch(error => {
+                    showMessage(_this, error)
+                })
+            },
+            fetchBusMom(busNumber) {
+                let params = new URLSearchParams();
+                params.append("busNumber", busNumber)
+                request({
+                    url: '/bus/base/info/getBusBaseInfo',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.busMom = res.data.data.list
+                    }
+                }).catch(error => {
+                    showMessage(_this, error)
+                })
+            },
+            fetchUser(busMomId) {
+                let params = new URLSearchParams();
+                params.append("id", busMomId);
+                request({
+                    url: '/user/detail',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        let busMom = res.data.data
+                        _this.associated.busMomPhone = busMom.phone
+                    }
+                }).catch(error => {
+                    showMessage(_this, "BusMom信息获取失败")
+                })
             }
         },
         computed: {},
