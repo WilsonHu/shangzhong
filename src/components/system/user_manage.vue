@@ -240,7 +240,7 @@
                       show-icon >
             </el-alert >
             <div slot="footer" class="dialog-footer" style="margin-bottom: 20px;margin-top: 20px" >
-                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button >
+                <el-button @click="onClose" icon="el-icon-close" type="danger">取 消</el-button >
                 <el-button type="primary" @click="onEidt" icon="el-icon-check">确 定</el-button >
             </div >
         </el-dialog >
@@ -450,6 +450,10 @@
 			    }
 
 		    },
+            onClose(){
+                _this.modifyForm.password=''
+                _this.modifyDialogVisible=false
+            },
 		    onEidt() {
 			    this.isError = this.validateForm(this.modifyForm, true);
 			    if (!_this.isError) {
@@ -521,6 +525,14 @@
 	    mounted: function () {
 		    this.onSelectUsers();
 	    },
+     /*   watch:{
+            modifyDialogVisible:{
+                handler: function () {
+                    _this.modifyForm.password=''
+                }
+
+            }
+        }*/
     }
 
 </script >

@@ -122,7 +122,7 @@
             },
         },
         mounted: function () {
-            window.addEventListener('keydown', _this.onkeydown);
+         /*   window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
                 _this.$router.push("/home");
@@ -166,6 +166,11 @@
                 });
             }else {
                 window.location.href="http://127.0.0.1:9090"
+            }*/
+            window.addEventListener('keydown', _this.onkeydown);
+            let user = JSON.parse(sessionStorage.getItem('user'));
+            if (user != null) {
+                this.ruleForm2.account = user.account;
             }
         },
         destroyed: function () {

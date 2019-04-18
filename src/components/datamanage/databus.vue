@@ -20,7 +20,7 @@
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
-                        <el-progress type="circle" :percentage="morning" status="text">
+                        <el-progress type="circle" :percentage="percentageMorning" status="text">
                             <span style="font-size: 30px;color: #409EFF">{{planedStudents - morningAbsentList.length}}</span>
                         </el-progress>
                     </div>
@@ -78,7 +78,7 @@
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
                     <div style="margin-top: 50px;text-align: center">
-                        <el-progress type="circle" :percentage="afternoon" color="#50D166" status="text">
+                        <el-progress type="circle" :percentage="percentageAfternoon" color="#50D166" status="text">
                             <span style="font-size: 30px;color: #50D166;">{{planedStudents - afternoonAbsentList.length}}</span>
                         </el-progress>
                     </div>
@@ -301,6 +301,8 @@
                 night: '',
                 absentList: [],
                 morning:100,
+                percentageMorning:100,
+                percentageAfternoon:100,
                 afternoon:100
             }
         },
@@ -404,7 +406,8 @@
                         if (_this.morningAbsentList.length>0) {
                             var num = (_this.morningAbsentList.length / _this.planedStudents)
                             var morningNum = (1 - num) * 100;
-                            _this.morning = morningNum
+                            _this.percentageMorning=morningNum;
+                            _this.morning = morningNum.toFixed(2)
                         }else{
                             _this.morning=100
                         }
@@ -434,8 +437,9 @@
                         _this.afternoonAbsentList = res.data.data;
                           if (_this.afternoonAbsentList.length>0){
                               var num = (_this.afternoonAbsentList.length / _this.planedStudents)
-                              var morningNum = (1 - num) * 100;
-                              _this.afternoon = morningNum
+                              var afternoonNum = (1 - num) * 100;
+                              _this.percentageAfternoon=afternoonNum
+                              _this.afternoon = afternoonNum.toFixed(2)
                           } else {
                               _this.afternoon=100
                           }

@@ -433,7 +433,6 @@
         filters: {},
 
         created: function () {
-            this.$message('这是一条消息提示');
             /*var da= _this.selectData.split(" ")
             var startTime= da[0]+" 00:00:00";
             var queryStartTime=new Date(startTime);

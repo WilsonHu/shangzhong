@@ -59,7 +59,7 @@ export default
 						path: '/home/datamanage/databus',
 						component: DataBus,
 						name: 'DataBus',
-						meta: '校车数据'
+						meta: '校车数据',
 					},
 					{
 						path: '/home/datamanage/classdata',

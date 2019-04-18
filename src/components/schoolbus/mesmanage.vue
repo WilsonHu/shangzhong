@@ -76,12 +76,6 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="readCount"
-                            sortable
-                            label="阅读数">
-                    </el-table-column>
-                    <el-table-column
-                            align="center"
                             label="操作"
                             width="150">
                         <template scope="scope">

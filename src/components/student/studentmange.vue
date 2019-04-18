@@ -310,8 +310,11 @@
                         </el-form>
                         <el-row style="margin-top: 20px">
                             <el-col :span="13" :offset="2">
-                                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
-                                <el-button type="primary" @click="chanageAss" icon="el-icon-check" style="margin-left: 150px">保存修改</el-button>
+                                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消
+                                </el-button>
+                                <el-button type="primary" @click="chanageAss" icon="el-icon-check"
+                                           style="margin-left: 150px">保存修改
+                                </el-button>
                             </el-col>
                         </el-row>
                     </div>
@@ -403,7 +406,9 @@
                             <el-col :span="15" :offset="2">
                                 <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消
                                 </el-button>
-                                <el-button type="primary" @click="changeContent" icon="el-icon-check" style="margin-left: 150px">提 交</el-button>
+                                <el-button type="primary" @click="changeContent" icon="el-icon-check"
+                                           style="margin-left: 150px">提 交
+                                </el-button>
                             </el-col>
                         </el-row>
                     </div>
@@ -620,6 +625,9 @@
                     familyPhone: '',
                     busMomName: '',
                     busMomPhone: '',
+                    teacherName: '',
+                    teacherPhone: ''
+
                 },
                 form: {
                     headImg: "",
@@ -643,7 +651,11 @@
                 photoData: "",
                 deleteItem: "",
                 teacher: [],
-                busMom: []
+                busMom: [],
+                stuGuardian: {
+                    family: '',
+                    familyPhone: ''
+                }
 
             }
         },
@@ -770,76 +782,90 @@
             handleStuSelect(index) {
                 _this.activeIndex = index;
                 if (index == 2) {
+                    _this.associated.family = _this.stuGuardian.family;
+                    _this.associated.familyPhone = _this.stuGuardian.familyPhone
                     _this.fetchBusMom(_this.modifyForm.busNumber)
-                    _this.associated.busMomName = _this.busMom[0].busMomName
                     _this.fetchUser(_this.busMom[0].busMom)
-                }
-            },
-            chanageAss(){
-                 /*问题:老师id没有，无法在前端进行修改。现在在前端修改的是busMom和学生的监护人信息*/
-              // _this.chanageTeacher();
-               _this.chanageStu(_this.modifyForm.id);
-                let params=new URLSearchParams();
-                let user={
-                    id:_this.busMom[0].busMom,
-                    name:_this.associated.busMomName,
-                    account:_this.associated.busMomName,
-                    phone:_this.associated.busMomPhone
-                }
-                params.append("user",user)
-                request({
-                    url:'ssss/user/update',
-                    method:'post',
-                    data:params
-                }).then(res=>{
-                    if (res.data.code==200){
-                        _this.$alert('修改成功', '提示', {
-                            confirmButtonText: '确定',
-                        })
-                    }
-                }).catch(error=>{
-                    showMessage(_this,"修改关联人员信息失败")
-                })
-            },
-            chanageTeacher(teacherId){
-                console.log(_this.associated.busMomName+"-----"+_this.associated.busMomPhone)
-                let params=new URLSearchParams();
-                let user={
-                    id:teacherId,
-                    name:_this.associated.teacherName,
-                    account:_this.associated.teacherName,
-                    phone:_this.associated.teacherPhone
-                }
-                params.append("user",user)
-                request({
-                    url:'/user/update',
-                    method:'post',
-                    data:params
-                }).then(res=>{
-                    if (res.data.code==200){
-                        _this.$alert('修改成功', '提示', {
-                            confirmButtonText: '确定',
-                        })
-                    }
-                }).catch(error=>{
-                    showMessage(_this,"修改关联人员信息失败")
-                })
-            },
-            chanageStu(stuId){
-                let params=new URLSearchParams();
-                let student={
-                    id:stuId,
-                    familyInfo:{"监护人":_this.associated.family,"联系电话":_this.associated.familyPhone}
-                }
-                params.append("student",student);
-                request({
-                    url:'/student/update',
-                    method:'post',
-                    data:params
-                }).then(res=>{
 
-                }).catch(error=>{
-                    showMessage(_this,"修改关联人员中监护人失败")
+                }
+            },
+            chanageAss() {
+                if (_this.associated.teacherName != _this.teacher.name || _this.associated.teacherPhone != _this.teacher.phone) {
+                    _this.chanageTeacher(_this.teacher.chargeTeacher);
+                }
+                if (_this.associated.family != _this.stuGuardian.family || _this.associated.familyPhone != _this.stuGuardian.familyPhone) {
+                    _this.chanageStu(_this.modifyForm.id);
+                }
+
+                    let params = new URLSearchParams();
+                    let user = {
+                        id: _this.busMom.id,
+                        name: _this.associated.busMomName,
+                        account: _this.associated.busMomName,
+                        phone: _this.associated.busMomPhone
+                    }
+                    params.append("user", JSON.stringify(user))
+                    request({
+                        url: '/user/update',
+                        method: 'post',
+                        data: params
+                    }).then(res => {
+                        if (res.data.code == 200) {
+                            _this.$alert('修改成功', '提示', {
+                                confirmButtonText: '确定',
+                                callback:action=>{
+                                    _this.modifyDialogVisible=false
+                                  _this.fetchStudents();
+                                }
+                            })
+                        }
+                    }).catch(error => {
+                        showMessage(_this, "修改关联人员信息失败")
+                    })
+
+
+
+
+            },
+            chanageTeacher(teacherId) {
+                console.log(_this.associated.busMomName + "-----" + _this.associated.busMomPhone)
+                let params = new URLSearchParams();
+                let user = {
+                    id: teacherId,
+                    name: _this.associated.teacherName,
+                    account: _this.associated.teacherName,
+                    phone: _this.associated.teacherPhone
+                }
+                params.append("user", JSON.stringify(user))
+                request({
+                    url: '/user/update',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    //if (res.data.code == 200) {}
+                }).catch(error => {
+                    //showMessage(_this, "修改关联人员信息失败")
+                })
+            },
+            chanageStu(stuId) {
+                let params = new URLSearchParams();
+                let student = {
+                    id: stuId,
+                    familyInfo: {"监护人": _this.associated.family, "联系电话": _this.associated.familyPhone}
+                }
+                if (_this.associated.familyPhone == ""||_this.associated.familyPhone==null) {
+                    student.familyInfo = {"监护人": _this.associated.family}
+                }
+                params.append("student", JSON.stringify(student));
+                request({
+                    url: '/student/update',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                    }
+                }).catch(error => {
+                    showMessage(_this, "修改关联人员中监护人失败")
                 })
 
             },
@@ -1032,10 +1058,10 @@
                 let familyInfo = data.familyInfo;
                 if (familyInfo != null) {
                     if (familyInfo.length < 20) {
-                        _this.associated.family = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf("}")).replace(/\"/g, "")
+                        _this.stuGuardian.family = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf("}")).replace(/\"/g, "")
                     } else {
-                        _this.associated.familyPhone = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf(",")).replace(/\"/g, "")
-                        _this.associated.family = familyInfo.substring(familyInfo.indexOf(",") + 7, familyInfo.indexOf("}")).replace(/\"/g, "")
+                        _this.stuGuardian.familyPhone = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf(",")).replace(/\"/g, "")
+                        _this.stuGuardian.family = familyInfo.substring(familyInfo.indexOf(",") + 7, familyInfo.indexOf("}")).replace(/\"/g, "")
 
                     }
                 }
@@ -1043,7 +1069,7 @@
                 for (var i = 0; i < _this.classArrays.length; i++) {
                     for (var k = 0; k < _this.classArrays[i].classes.length; k++) {
                         if (data.banjiName == _this.classArrays[i].classes[k].label) {
-                            _this.fetchTeacher(_this.classArrays[i].grade_id,data.banjiName)
+                            _this.fetchTeacher(_this.classArrays[i].grade_id, data.banjiName)
                         }
                     }
                 }
@@ -1151,8 +1177,9 @@
                 }).then(res => {
                     if (res.data.code == 200) {
                         _this.teacher = res.data.data
-                        _this.associated.teacherName=_this.teacher.username
-                        _this.associated.teacherPhone=_this.teacher.phone
+                        _this.associated.teacherName = _this.teacher.name
+                        _this.associated.teacherPhone = _this.teacher.phone
+                        console.log(JSON.stringify(_this.teacher))
                     }
                 }).catch(error => {
                     showMessage(_this, error)
@@ -1174,6 +1201,7 @@
                 })
             },
             fetchUser(busMomId) {
+
                 let params = new URLSearchParams();
                 params.append("id", busMomId);
                 request({
@@ -1182,8 +1210,9 @@
                     data: params
                 }).then(res => {
                     if (res.data.code == 200) {
-                        let busMom = res.data.data
-                        _this.associated.busMomPhone = busMom.phone
+                        _this.busMom = res.data.data
+                        _this.associated.busMomPhone = _this.busMom.phone
+                        _this.associated.busMomName = _this.busMom.username
                     }
                 }).catch(error => {
                     showMessage(_this, "BusMom信息获取失败")

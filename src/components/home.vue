@@ -251,6 +251,7 @@
             },
 
             handleSelect(key, keyPath) {
+                console.log("路径跳转:"+key)
                 _this.$router.push(key)
             },
 
