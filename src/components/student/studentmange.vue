@@ -134,7 +134,7 @@
                                     size="small"
                                     type="danger"
                                     icon="el-icon-delete"
-                                    @click="handleDelete(scope.$index, scope.row)">
+                                    @click="handleDelete(scope.$index,scope.row)">
                             </el-button>
                         </template>
                     </el-table-column>
@@ -258,7 +258,7 @@
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="7" :offset="17">
+                            <el-col :span="18" :offset="15">
                                 <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消
                                 </el-button>
                                 <el-button type="primary" @click="onEdit" icon="el-icon-check">保存</el-button>
@@ -325,19 +325,21 @@
                         <h4>预约变更</h4>
                         <el-form :model="modifyForm" label-position="top">
                             <el-row style="margin-top: 10px">
-                                <el-col :span="4">
+                                <el-col :span="7">
                                     <el-form-item label="学号：">
-                                        <el-input v-model="modifyForm.studentNumber"></el-input>
+                                        <el-input v-model="modifyForm.studentNumber" :disabled="true"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="4" :offset="1">
+                                <el-col :span="6" :offset="1">
                                     <el-form-item label="姓名：">
-                                        <el-input v-model="modifyForm.name"></el-input>
+                                        <el-input v-model="modifyForm.name" :disabled="true"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="4" :offset="1">
+                            </el-row>
+                            <el-row>
+                                <el-col :span="10">
                                     <el-form-item label="班级：">
-                                        <el-select v-model="modifyForm.banji" clearable>
+                                        <el-select v-model="modifyForm.banji" disabled clearable style="width: 140%">
                                             <el-option
                                                     v-for="item in allClasses"
                                                     v-bind:value="item.id"
@@ -506,7 +508,7 @@
                     </el-form>
                     <el-row style="margin-top: 20px">
                         <el-col :span="7" :offset="17">
-                            <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消
+                            <el-button @click="handleStuInfo" icon="el-icon-close" type="danger">取 消
                             </el-button>
                             <el-button type="primary" @click="onAdd" icon="el-icon-check">提 交</el-button>
                         </el-col>
@@ -660,6 +662,11 @@
             }
         },
         methods: {
+            handleStuInfo(){
+                _this.form={}
+                _this.addDialogVisible=false
+            },
+
             handleDelete(index, item) {
                 _this.deleteConfirmVisible = true;
                 _this.deleteItem = item;
@@ -789,13 +796,33 @@
 
                 }
             },
+            fetchPhone(assObj) {
+                let phone = /^1[345789]\d{9}$/;
+                let result = true
+
+                if (!(phone.test(assObj.busMomPhone))) {
+                    showMessage(_this, 'busMom手机号输入不正确')
+                    result = false
+                }else if (!(phone.test(assObj.teacherPhone))) {
+                    showMessage(_this, '老师手机号输入不正确')
+                    result = false
+
+                }else if (assObj.familyPhone!="") {
+                    if (!(phone.test(assObj.familyPhone))) {
+                        showMessage(_this, '监护人手机号输入不正确')
+                        result = false
+                    }
+                }
+                return result;
+            },
             chanageAss() {
-                if (_this.associated.teacherName != _this.teacher.name || _this.associated.teacherPhone != _this.teacher.phone) {
-                    _this.chanageTeacher(_this.teacher.chargeTeacher);
-                }
-                if (_this.associated.family != _this.stuGuardian.family || _this.associated.familyPhone != _this.stuGuardian.familyPhone) {
-                    _this.chanageStu(_this.modifyForm.id);
-                }
+                if ( _this.fetchPhone(_this.associated)) {
+                    if (_this.associated.teacherName != _this.teacher.name || _this.associated.teacherPhone != _this.teacher.phone) {
+                         _this.chanageTeacher(_this.teacher.chargeTeacher);
+                    }
+                    if (_this.associated.family != _this.stuGuardian.family || _this.associated.familyPhone != _this.stuGuardian.familyPhone) {
+                         _this.chanageStu(_this.modifyForm.id);
+                    }
 
                     let params = new URLSearchParams();
                     let user = {
@@ -813,9 +840,9 @@
                         if (res.data.code == 200) {
                             _this.$alert('修改成功', '提示', {
                                 confirmButtonText: '确定',
-                                callback:action=>{
-                                    _this.modifyDialogVisible=false
-                                  _this.fetchStudents();
+                                callback: action => {
+                                    _this.modifyDialogVisible = false
+                                    _this.fetchStudents();
                                 }
                             })
                         }
@@ -823,12 +850,9 @@
                         showMessage(_this, "修改关联人员信息失败")
                     })
 
-
-
-
+                }
             },
             chanageTeacher(teacherId) {
-                console.log(_this.associated.busMomName + "-----" + _this.associated.busMomPhone)
                 let params = new URLSearchParams();
                 let user = {
                     id: teacherId,
@@ -853,7 +877,7 @@
                     id: stuId,
                     familyInfo: {"监护人": _this.associated.family, "联系电话": _this.associated.familyPhone}
                 }
-                if (_this.associated.familyPhone == ""||_this.associated.familyPhone==null) {
+                if (_this.associated.familyPhone == "" || _this.associated.familyPhone == null) {
                     student.familyInfo = {"监护人": _this.associated.family}
                 }
                 params.append("student", JSON.stringify(student));
@@ -1056,7 +1080,10 @@
                 _this.busMom = [];
                 _this.fetchBusMom(_this.modifyForm.busNumber)
                 let familyInfo = data.familyInfo;
+
                 if (familyInfo != null) {
+                    _this.stuGuardian.familyPhone="";
+                    _this.stuGuardian.family="";
                     if (familyInfo.length < 20) {
                         _this.stuGuardian.family = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf("}")).replace(/\"/g, "")
                     } else {
@@ -1179,7 +1206,6 @@
                         _this.teacher = res.data.data
                         _this.associated.teacherName = _this.teacher.name
                         _this.associated.teacherPhone = _this.teacher.phone
-                        console.log(JSON.stringify(_this.teacher))
                     }
                 }).catch(error => {
                     showMessage(_this, error)
@@ -1223,7 +1249,8 @@
 
         filters: {},
 
-        created: function () {},
+        created: function () {
+        },
         mounted: function () {
             _this.getClasses();
             _this.getBusList();

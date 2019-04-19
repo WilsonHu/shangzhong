@@ -8,7 +8,7 @@
                          @select="handleSelect">
                     <el-menu-item v-for="item in sub.children"
                                   :index="item.path"
-                                  v-if="sub.path == '/home/datamanage' "
+                                  v-if="sub.path == '/home/datamanage' && subPathExist(item.path)"
                                   style="text-align: center; font-size: 15px; font-weight: bold;height: 90px;line-height: 90px;margin-right: 36px;margin-left: 36px ">
                         {{item.meta}}
                     </el-menu-item>
@@ -30,6 +30,7 @@
             _this = this;
             return {
                 userinfo: {},
+                scopeStr:""
             }
         },
         methods: {
@@ -38,11 +39,15 @@
             },
             getIndex(item, list) {
                 return list.indexOf(item);
+            },
+            subPathExist(path) {
+                return _this.scopeStr.indexOf(path) != -1;
             }
         },
         computed: {},
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            this.scopeStr = sessionStorage.getItem("scope");
         },
         mounted: function () {
 

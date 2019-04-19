@@ -47,7 +47,7 @@
                 <el-col :span="22">
                     <div style="text-align: left" >
                         <el-row style="margin-top: 10px;margin-bottom: 20px">
-                            <el-col :span="4" :offset="18" >
+                            <el-col :span="6" :offset="16" >
                                 <el-input v-model="queryKey"
                                           placeholder="输入站点查询" clearable
                                           auto-complete="off" ></el-input >
@@ -85,13 +85,6 @@
                         prop="stationName"
                         sortable
                         label="站点" >
-                </el-table-column >
-                <el-table-column
-                        align="center"
-                        prop="gpsInfo"
-                        sortable
-                        width="250"
-                        label="GPS" >
                 </el-table-column >
                 <el-table-column
                         align="center"
@@ -178,11 +171,6 @@
                     <el-col :span="10">
                         <el-form-item label="站点名：" :label-width="formLabelWidth">
                             <el-input v-model="modifyForm.stationName" clearable></el-input>
-                        </el-form-item>
-                    </el-col >
-                    <el-col :span="10" :offset="1">
-                        <el-form-item label="GPS：" :label-width="formLabelWidth">
-                            <el-input v-model="modifyForm.gpsInfo" clearable></el-input>
                         </el-form-item>
                     </el-col >
                 </el-row>

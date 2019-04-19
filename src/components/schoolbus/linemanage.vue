@@ -30,9 +30,9 @@
                 <el-col :span="22">
                     <div style="text-align: left" >
                         <el-row style="margin-top: 10px;margin-bottom: 20px">
-                            <el-col :span="4" :offset="18" >
+                            <el-col :span="6" :offset="16" >
                                 <el-input v-model="queryKey"
-                                          placeholder="输入关键字查询" clearable
+                                          placeholder="根据线路，上放学，站点查询" clearable
                                           auto-complete="off" ></el-input >
                             </el-col >
                             <el-col :span="1" style="margin-left: 10px" >

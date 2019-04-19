@@ -25,11 +25,11 @@
                     <el-row style="margin-top: 10px">
                         <el-col :offset="22" :span="1">
                             <div>
-                                <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
+                               <img style=" height: 60px;width:60px; border-radius: 50%;align-items: center;justify-content: center;
                                     overflow: hidden;" :src="getPhoto()"/>
                             </div>
                         </el-col>
-                        <el-col :span="1">
+                        <el-col   :span="1">
                             <label
                                     style="font-size: 18px;
                                     cursor: pointer;
@@ -162,7 +162,7 @@
         },
         methods: {
             getPhoto() {
-                return require("../assets/img/ldh.png");
+                return require("../assets/img/shzx.png");
             },
             goToHome() {
                 _this.$router.push("/home");
@@ -205,7 +205,6 @@
                         }
                     },
                     error: function (error) {
-                        console.log(error);
                         showMessage(_this, error, 0);
                     }
                 });
@@ -251,7 +250,6 @@
             },
 
             handleSelect(key, keyPath) {
-                console.log("路径跳转:"+key)
                 _this.$router.push(key)
             },
 
@@ -291,6 +289,7 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                            sessionStorage.setItem("scope", data.data.roleScope);
                         } else {
                             showMessage(_this, data.message, 0);
                         }

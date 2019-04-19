@@ -278,7 +278,6 @@
 
             handleDelete(index, data){
                 let params=new URLSearchParams();
-                console.log(data.id)
                 params.append("id",data.id);
                 request({
                     url:`${HOST}messages/delete`,
@@ -300,7 +299,6 @@
                 })
             },
             onAdd(){
-                console.log(_this.sendTime)
                 if (_this.verifyForm(_this.addForm)){
                     let modityFrom={
                         sendTime:_this.sendTime,

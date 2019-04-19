@@ -381,7 +381,6 @@
             _this.getBusList();
             _this.getBusStationList();
             _this.getBanjiList();
-            console.log(JSON.stringify(_this.gradeList))
 
         },
         mounted: function () {

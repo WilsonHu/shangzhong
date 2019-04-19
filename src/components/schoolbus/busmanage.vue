@@ -50,7 +50,7 @@
             <el-col :span="21">
                 <div style="text-align: left" >
                     <el-row style="margin-top: 10px;margin-bottom: 20px">
-                        <el-col :span="4" :offset="18" >
+                        <el-col :span="6" :offset="16" >
                             <el-input v-model="queryKey"
                                       placeholder="输入校车或busmom查询" clearable
                                       auto-complete="off" ></el-input >
@@ -715,7 +715,6 @@
 				    return;
 			    }
 			    _this.regionData.selectId = key;
-			    console.log(_this.regionData.selectId)
 			    for (let i = 0; i < _this.regionData.subList.length; i++) {
 				    if (_this.regionData.subList[i].id == key) {
 					    _this.regionData.selectName = _this.regionData.subList[i].name

@@ -154,7 +154,6 @@
                     boardStationMorning: data.newStation,
                     boardStationAfternoon: data.newStation,
                 }
-                console.log(_this.allBusLine[0])
                 if (_this.allBusLine != null) {
                     var morning = _this.allBusLine[0].id
                     var afternoon = _this.allBusLine[1].id

@@ -361,7 +361,6 @@
                         _this.tableData = res.data.data.list;
                         _this.totalRecords = res.data.data.total;
                         _this.startRow = res.data.data.startRow;
-                        console.log(JSON.stringify(_this.tableData))
                     }
                     else {
                         showMessage(_this,"获取数据失败！");
