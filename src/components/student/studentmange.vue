@@ -1223,10 +1223,7 @@
 
         filters: {},
 
-        created: function () {
-
-
-        },
+        created: function () {},
         mounted: function () {
             _this.getClasses();
             _this.getBusList();

@@ -48,6 +48,7 @@
                                 size="small"
                                 icon="el-icon-delete"
                                 type="danger"
+                                :disabled="scope.row.roleName=='超级管理员'"
                                 @click="handleDelete(scope.row)">删除
                         </el-button>
                     </template>
@@ -360,6 +361,7 @@
                         _this.tableData = res.data.data.list;
                         _this.totalRecords = res.data.data.total;
                         _this.startRow = res.data.data.startRow;
+                        console.log(JSON.stringify(_this.tableData))
                     }
                     else {
                         showMessage(_this,"获取数据失败！");

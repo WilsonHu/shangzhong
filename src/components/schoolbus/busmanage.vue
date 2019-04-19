@@ -52,7 +52,7 @@
                     <el-row style="margin-top: 10px;margin-bottom: 20px">
                         <el-col :span="4" :offset="18" >
                             <el-input v-model="queryKey"
-                                      placeholder="输入关键字查询" clearable
+                                      placeholder="输入校车或busmom查询" clearable
                                       auto-complete="off" ></el-input >
                         </el-col >
                         <el-col :span="1" style="margin-left: 10px" >
@@ -105,8 +105,8 @@
                     </el-table-column >
                     <el-table-column
                             align="center"
-                            prop="busSupplier"
-                            label="供应商" >
+                            prop="busDriverName"
+                            label="司机" >
                     </el-table-column >
                     <el-table-column label="BusMom"
                                      align="center"
@@ -215,7 +215,7 @@
                       <!--show-icon>-->
             <!--</el-alert>-->
             <el-row style="margin-bottom: 20px;margin-right: 20px">
-                <el-col :span="2" :offset="19">
+                <el-col :span="4" :offset="17">
                     <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
                 </el-col>
                 <el-col :span="2" style="margin-left: 10px">
@@ -269,11 +269,6 @@
                                 <el-col :span="7" :offset="1">
                                     <el-form-item label="车牌信息：">
                                         <el-input v-model="modifyForm.plateNumber" clearable></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="7" :offset="1">
-                                    <el-form-item label="校车供应商：">
-                                        <el-input v-model="modifyForm.busSupplier" clearable></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
@@ -389,16 +384,9 @@
                             <el-table-column
                                     align="center"
                                     prop="studentNumber"
-                                    width="80"
+                                    width="150"
                                     sortable
                                     label="学号">
-                            </el-table-column>
-                            <el-table-column
-                                    align="center"
-                                    prop="station"
-                                    width="100"
-                                    label="头像">
-
                             </el-table-column>
                             <el-table-column
                                     align="center"
@@ -462,7 +450,7 @@
                 regionList:RegionList,
 			    regionData: {
 				    selectId: "0",
-				    selectName: '浦东',
+				    selectName: '浦西',
 				    subList: RegionList,
 			    },
                 form: {
@@ -683,6 +671,7 @@
                                     let stations = lineLists[i].stations.split(",");
                                     for (let j = 0; j < stations.length; j++) {
                                         _this.morningLineStations.push({"station":stations[j]});
+
                                     }
                                 }
                                 if(lineLists[i].mode === "放学") {
