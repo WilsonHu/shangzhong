@@ -15,7 +15,7 @@
                      style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke">
                     <div style="text-align: left;font-weight: bold">
 					     <span class="span-normal">
-					        早班统计
+					        上学统计
 				         </span>
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
@@ -26,7 +26,7 @@
                     </div>
                     <div style="text-align: center;margin-top: 30px">
                          <span class="span-normal" style="font-weight: bold;color: lightgray">
-                            早班乘坐统计
+                            上学乘坐统计
                          </span>
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 30px"></div>
@@ -73,7 +73,7 @@
                      style="width: 350px;height: 420px; border-radius: 5px;background-color: white;border-color: whitesmoke">
                     <div style="text-align: left;font-weight: bold">
 					     <span class="span-normal">
-					        午班统计
+					        放学统计
 				         </span>
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 16px"></div>
@@ -84,7 +84,7 @@
                     </div>
                     <div style="text-align: center;margin-top: 30px">
                          <span class="span-normal" style="font-weight: bold">
-                            午班乘坐统计
+                            放学乘坐统计
                          </span>
                     </div>
                     <div style="height: 1px;background-color: whitesmoke;margin-top: 30px"></div>
@@ -412,7 +412,7 @@
                             _this.morning=100
                         }
                     } else {
-                        showMessage(_this, "获取早班缺乘人数失败！");
+                        showMessage(_this, "获取上学缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
@@ -445,7 +445,7 @@
                           }
 
                     } else {
-                        showMessage(_this, "获取午班缺乘人数失败！");
+                        showMessage(_this, "获取上学缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
@@ -493,11 +493,11 @@
                             var childrenList = new Array();
                             var children = new Object();
                             children.id = Number(busList[i].number);
-                            children.label = "早班";
+                            children.label = "上学";
                             childrenList[0] = children;
                             var children1 = new Object();
                             children1.id = Number(busList[i].number);
-                            children1.label = "午班";
+                            children1.label = "放学";
                             childrenList[1] = children1;
 
                             tree.children = childrenList;

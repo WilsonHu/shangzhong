@@ -42,7 +42,7 @@
                             :default-active="regionData.selectId" @select="handleSelect" >
                         <el-menu-item v-for="item in regionData.subList" :index="item.id"
                                       style="text-align: center;font-size: 15px; font-weight: bold" >
-                            {{item.name}}校区
+                            {{item.name}}
                         </el-menu-item >
                     </el-menu >
                 </div >
@@ -450,7 +450,7 @@
                 regionList:RegionList,
 			    regionData: {
 				    selectId: "0",
-				    selectName: '浦西',
+				    selectName: '浦西校区',
 				    subList: RegionList,
 			    },
                 form: {
