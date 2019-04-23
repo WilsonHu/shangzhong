@@ -67,9 +67,9 @@
                             width="150">
                         <template scope="scope">
                             <el-tag type="success"
-                                    @click="fetchBusLine(scope.$index,scope.row)" v-if="scope.row.confirmStatus=='0'">YES
+                                    @click="updateStatus(scope.row.id,1)" v-if="scope.row.confirmStatus=='0'">YES
                             </el-tag>
-                            <el-tag type="danger" @click="handleCancel(scope.$index,scope.row)"
+                            <el-tag type="danger" @click="handleCancel(scope.$index,2)"
                                     v-if="scope.row.confirmStatus=='0'">NO
                             </el-tag>
                             <el-tag type="success" v-if="scope.row.confirmStatus=='1'">已修改</el-tag>
@@ -147,7 +147,7 @@
                 _this.currentPage=val;
                 _this.search();
             },
-            updateStu(index, data) {
+         /*   updateStu(index, data) {
                 let params = new URLSearchParams();
                 let student = {
                     id: data.student,
@@ -181,8 +181,7 @@
                 }).catch(error => {
                     showMessage(_this, error)
                 })
-
-            },
+            },*/
             updateStatus(id, status) {
                 let params = new URLSearchParams();
                 params.append("id", id);
@@ -201,7 +200,12 @@
                                 }
                             });
                         }else {
-                            _this.search()
+                            this.$alert('已确认，修改信息将会在变更日期凌晨时进行修改', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    _this.search();
+                                }
+                            });
                         }
 
                     }
@@ -210,7 +214,7 @@
                 })
 
             },
-            fetchBusLine(index, data) {
+           /* fetchBusLine(index, data) {
                 let params = new URLSearchParams();
                 params.append("busNumber", data.newBusNumber);
                 request({
@@ -221,14 +225,13 @@
                     if (res.data.code == 200) {
                         _this.allBusLine = res.data.data.list;
                         _this.busLineTotal = res.data.data.total
-                        _this.updateStu(index,data)
                     } else {
                         showMessage(_this, "获取线路数据失败！");
                     }
                 }).catch(error => {
                     showMessage(_this, error)
                 })
-            },
+            },*/
             handleCancel(index, data) {
                 _this.updateStatus(data.id, "2")
             }

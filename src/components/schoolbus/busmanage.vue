@@ -29,7 +29,6 @@
             <el-col :span="3" style="text-align: center;margin-top: 10px">
                 <div>
                     <el-button
-
                             icon="el-icon-plus"
                             size="normal"
                             type="primary"
@@ -42,7 +41,7 @@
                             :default-active="regionData.selectId" @select="handleSelect" >
                         <el-menu-item v-for="item in regionData.subList" :index="item.id"
                                       style="text-align: center;font-size: 15px; font-weight: bold" >
-                            {{item.name}}校区
+                            {{item.name}}
                         </el-menu-item >
                     </el-menu >
                 </div >
@@ -69,7 +68,7 @@
                         element-loading-text="获取数据中..."
                         :data="tableData"
                         @selection-change="handleSelectionChange"
-                        :default-sort="{prop: 'number', order: 'descending'}"
+
                         border
                         highlight-current-row
                         empty-text="暂无数据..."
@@ -83,19 +82,18 @@
                     <el-table-column
                             align="center"
                             prop="number"
-                            sortable
+
                             label="校车" >
                     </el-table-column >
                     <el-table-column
                             align="center"
                             prop="plateNumber"
-                            sortable
+
                             label="车牌" >
                     </el-table-column >
                     <el-table-column
                             align="center"
                             prop="busRangeName"
-                            sortable
                             label="上学/放学区间" >
                         <template scope="scope" >
                             <div >
@@ -110,7 +108,6 @@
                     </el-table-column >
                     <el-table-column label="BusMom"
                                      align="center"
-                                     sortable
                                      prop="busMomName" >
                         <template scope="scope" >
                             <div >
@@ -450,7 +447,7 @@
                 regionList:RegionList,
 			    regionData: {
 				    selectId: "0",
-				    selectName: '浦西',
+				    selectName: '浦西校区',
 				    subList: RegionList,
 			    },
                 form: {

@@ -83,12 +83,12 @@
                         width="100"
                         align="center"
                         prop="mode"
-                        label="上放学" >
+                        label="上放学">
                 </el-table-column >
                 <el-table-column
                         align="center"
                         prop="stations"
-                        label="站点" >
+                        label="站点">
                 </el-table-column >
                 <el-table-column
                         align="center"

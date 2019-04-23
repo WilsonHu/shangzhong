@@ -122,7 +122,7 @@
             },
         },
         mounted: function () {
-         /*   window.addEventListener('keydown', _this.onkeydown);
+        /* window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
                 _this.$router.push("/home");
@@ -139,16 +139,16 @@
                 } else {
                     params = url.slice(url.indexOf('?') + 1);
                 }
-                let mark3= url.indexOf('=');
+                let mark3= params.indexOf('=');
                 console.log(params);
                 let ticket = params.slice(mark3+1);
                 console.log(ticket);
                 $.ajax({
-                    url: HOST + "CAS/demo",
+                    url: HOST + "user/ShzxCASLogin",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        "ticket":ticket
+                        "shzxStaffCode":ticket
                     },
                     success: function (data) {
                         if(data.code==200){
@@ -165,13 +165,8 @@
                     }
                 });
             }else {
-                window.location.href="http://127.0.0.1:9090"
+                window.location.href=IP;
             }*/
-            window.addEventListener('keydown', _this.onkeydown);
-            let user = JSON.parse(sessionStorage.getItem('user'));
-            if (user != null) {
-                this.ruleForm2.account = user.account;
-            }
         },
         destroyed: function () {
             console.log("destroyed vue");

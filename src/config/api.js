@@ -1,8 +1,8 @@
 //Server root address
 var IP = "http://127.0.0.1:8080/";
 //var HOST = "http://47.101.141.182/shzx_api/";
-var HOST=IP;
-//var HOST = "http://211.144.105.121/shzx_api/";
+//var HOST=IP;
+var HOST = "http://211.144.105.121/shzx_api/";
 var DOWNLOADPATH = IP + "/oll/";
 var SOCKECT_ADDR = "ws://127.0.0.1:9998";//CRHService IP address(Windows service)
 var SYSTEMNAME = "上海中学校车管理系统";
@@ -64,11 +64,11 @@ const DateOptions = {
 const RegionList = [
     {
         id: "0",
-        name: '浦西',
+        name: '浦西校区',
     },
     {
         id: "1",
-        name: '浦东',
+        name: '浦东校区',
     }
 ]
 

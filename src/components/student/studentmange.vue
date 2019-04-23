@@ -335,9 +335,7 @@
                                         <el-input v-model="modifyForm.name" :disabled="true"></el-input>
                                     </el-form-item>
                                 </el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="10">
+                                <el-col :span="5" :offset="1">
                                     <el-form-item label="班级：">
                                         <el-select v-model="modifyForm.banji" disabled clearable style="width: 140%">
                                             <el-option
@@ -349,8 +347,9 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-row style="margin-top: 10px">
-                                <el-col :span="10">
+                            <el-row>
+
+                                <el-col :span="7">
                                     <el-form-item label="原校车：">
                                         <el-select v-model="modifyForm.busNumber" @change="" disabled clearable
                                                    filterable style="width: 140%">
@@ -362,12 +361,11 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                            </el-row>
-                            <el-row style="margin-top: 10px">
-                                <el-col :span="10">
+
+                                <el-col :span="7" :offset="5">
                                     <el-form-item label="新校车：">
                                         <el-select v-model="changeForm.busNumber" @change="onAddBusChange" clearable
-                                                   filterable style="width: 140%">
+                                                   filterable style="width: 140%;margin-left: 10px">
                                             <el-option
                                                     v-for="item in busList"
                                                     v-bind:value="item.number"
@@ -376,6 +374,9 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px">
+
                             </el-row>
                             <el-row>
                                 <el-col :span="10">
@@ -406,7 +407,7 @@
                         </el-form>
                         <el-row style="margin-top: 20px">
                             <el-col :span="15" :offset="2">
-                                <el-button @click="modifyDialogVisible = false" icon="el-icon-close" type="danger">取 消
+                                <el-button @click="modify" icon="el-icon-close" type="danger">取 消
                                 </el-button>
                                 <el-button type="primary" @click="changeContent" icon="el-icon-check"
                                            style="margin-left: 150px">提 交
@@ -572,10 +573,12 @@
                         </el-row>
                     </el-form>
                     <el-row style="margin-top: 20px">
-                        <el-col :span="7" :offset="8">
-                            <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消
+                        <el-col :span="13" :offset="6">
+                            <el-button @click="changeDialogVisible = false" icon="el-icon-close" type="danger">取 消
                             </el-button>
-                            <el-button type="primary" @click="onAddRecord" icon="el-icon-check">提 交</el-button>
+                            <el-button type="primary" @click="onAddRecord" icon="el-icon-check"
+                                       style="margin-left: 150px">提 交
+                            </el-button>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -662,9 +665,16 @@
             }
         },
         methods: {
-            handleStuInfo(){
-                _this.form={}
-                _this.addDialogVisible=false
+            modify() {
+                _this.changeForm = {};
+                _this.form.boardStationMorning='';
+                _this.form.boardStationAfternoon=''
+                _this.modifyDialogVisible = false;
+
+            },
+            handleStuInfo() {
+                _this.form = {}
+                _this.addDialogVisible = false
             },
 
             handleDelete(index, item) {
@@ -722,13 +732,18 @@
                 _this.fetchBusLine(newBusNumber);
             },
             changeContent() {
-
-                _this.changeForm.name = _this.modifyForm.name;
-                _this.changeForm.oldbusNumber = _this.modifyForm.busNumber;
-                _this.changeForm.newbusNumber = _this.form.busNumber;
-                _this.fetchBusStation(_this.form.boardStationAfternoon)
-                _this.modifyDialogVisible = false;
-                _this.changeDialogVisible = true;
+                if (_this.changeForm.busNumber == "" || _this.changeForm.busNumber == null) {
+                    this.$alert('请选择要变更的校车', '提示', {
+                        confirmButtonText: '确定'
+                    })
+                } else {
+                    _this.changeForm.name = _this.modifyForm.name;
+                    _this.changeForm.oldbusNumber = _this.modifyForm.busNumber;
+                    _this.changeForm.newbusNumber = _this.form.busNumber;
+                    _this.fetchBusStation(_this.form.boardStationAfternoon)
+                    _this.modifyDialogVisible = false;
+                    _this.changeDialogVisible = true;
+                }
             },
             fetchBusStation(boardStationNum) {
                 let params = new URLSearchParams();
@@ -803,11 +818,11 @@
                 if (!(phone.test(assObj.busMomPhone))) {
                     showMessage(_this, 'busMom手机号输入不正确')
                     result = false
-                }else if (!(phone.test(assObj.teacherPhone))) {
+                } else if (!(phone.test(assObj.teacherPhone))) {
                     showMessage(_this, '老师手机号输入不正确')
                     result = false
 
-                }else if (assObj.familyPhone!="") {
+                } else if (assObj.familyPhone != "") {
                     if (!(phone.test(assObj.familyPhone))) {
                         showMessage(_this, '监护人手机号输入不正确')
                         result = false
@@ -816,12 +831,12 @@
                 return result;
             },
             chanageAss() {
-                if ( _this.fetchPhone(_this.associated)) {
+                if (_this.fetchPhone(_this.associated)) {
                     if (_this.associated.teacherName != _this.teacher.name || _this.associated.teacherPhone != _this.teacher.phone) {
-                         _this.chanageTeacher(_this.teacher.chargeTeacher);
+                        _this.chanageTeacher(_this.teacher.chargeTeacher);
                     }
                     if (_this.associated.family != _this.stuGuardian.family || _this.associated.familyPhone != _this.stuGuardian.familyPhone) {
-                         _this.chanageStu(_this.modifyForm.id);
+                        _this.chanageStu(_this.modifyForm.id);
                     }
 
                     let params = new URLSearchParams();
@@ -1082,8 +1097,8 @@
                 let familyInfo = data.familyInfo;
 
                 if (familyInfo != null) {
-                    _this.stuGuardian.familyPhone="";
-                    _this.stuGuardian.family="";
+                    _this.stuGuardian.familyPhone = "";
+                    _this.stuGuardian.family = "";
                     if (familyInfo.length < 20) {
                         _this.stuGuardian.family = familyInfo.substring(familyInfo.indexOf(":") + 1, familyInfo.indexOf("}")).replace(/\"/g, "")
                     } else {
