@@ -416,7 +416,7 @@
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    console.log(error)
+                   showMessage(_this,'接口内部错误，请联系管理员',0)
                 })
             },
             getAfternoonAbsentStudents() {
@@ -445,18 +445,17 @@
                           }
 
                     } else {
-                        showMessage(_this, "获取放学缺乘人数失败！");
+                        showMessage(_this, "获取放学缺乘人数失败！",0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    console.log(error)
+                   showMessage(error)
                 })
             },
             getNightStudents() {
                 let params = new URLSearchParams();
                 let startDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 0, 0, 0, 0);
                 let endDate = new Date(_this.selectData.getFullYear(), _this.selectData.getMonth(), _this.selectData.getDate(), 23, 59, 59, 999);
-
                 params.set("queryStartTime", startDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("queryFinishTime", endDate.format("yyyy-MM-dd hh:mm:ss"));
                 params.set("recordFlag", "晚班");
@@ -468,7 +467,7 @@
                     if (res.data.code == 200) {
                         _this.night = res.data.data;
                     } else {
-                        showMessage(_this, "获取晚班乘人数失败！");
+                        showMessage(_this, "获取晚班乘人数失败！",0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
@@ -505,7 +504,7 @@
                         }
                         _this.treeData = treeList;
                     } else {
-                        showMessage(_this, "获取获取车辆信息失败！");
+                        showMessage(_this, "获取获取车辆信息失败！",0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {

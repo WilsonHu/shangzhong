@@ -298,6 +298,7 @@
                         showMessage(_this, '服务器访问出错！', 0);
                     }
                 })
+
             }
 
         },
@@ -306,12 +307,14 @@
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.roleId);
+
         },
         mounted: function () {
 //		    setInterval(function getDate() {
 //			    var date = new Date();
 //			    _this.current_time = date.format("yyyy-MM-dd hh:mm:ss");
 //		    }, 1000);//定时器
+
         },
         destroyed: function () {
             window.clearInterval(this.reduceTime)

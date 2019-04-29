@@ -101,7 +101,7 @@
                         _this.isError = res.data.code != 200;
                         if (!_this.isError) {
                             sessionStorage.setItem('user', JSON.stringify(res.data.data));//res.data
-                            //setToken(JSON.stringify(res.data.data))
+                            _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
                             _this.$router.push("/home");
                         }
                         else {
@@ -113,6 +113,25 @@
                     }))
                 }
             },
+            fetchUserRoleScope(roleId) {
+                $.ajax({
+                    url: HOST + "role/detail",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {"id": roleId},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                            sessionStorage.setItem("scope", data.data.roleScope);
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '服务器访问出错！', 0);
+                    }
+                })
+            },
             onkeydown: function (e) {
                 var ev = document.all ? window.event : e;
                 if (ev.keyCode == 13) {//enter key
@@ -122,7 +141,7 @@
             },
         },
         mounted: function () {
-        /* window.addEventListener('keydown', _this.onkeydown);
+        /*window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
                 _this.$router.push("/home");

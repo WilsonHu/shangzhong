@@ -41,16 +41,39 @@
                 return list.indexOf(item);
             },
             subPathExist(path) {
+
                 return _this.scopeStr.indexOf(path) != -1;
+            },
+
+            fetchUserRoleScope(roleId) {
+                $.ajax({
+                    url: HOST + "role/detail",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {"id": roleId},
+                    success: function (data) {
+                        if (data.code == 200) {
+                            _this.scopeStr = data.data.roleScope;
+                        } else {
+                            showMessage(_this, data.message, 0);
+                        }
+                    },
+                    error: function (data) {
+                        showMessage(_this, '服务器访问出错！', 0);
+                    }
+                })
+
             }
         },
         computed: {},
         created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
-            this.scopeStr = sessionStorage.getItem("scope");
+            this.fetchUserRoleScope(this.userinfo.roleId);
+
         },
         mounted: function () {
-
+          /*  _this.userinfo = JSON.parse(sessionStorage.getItem('user'));
+            _this.scopeStr = sessionStorage.getItem("scope");*/
         },
     }
 
