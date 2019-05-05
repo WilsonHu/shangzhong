@@ -1,7 +1,8 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div style="background:rgba(250,250,250,1);">
         <el-container>
-            <el-aside style="background-color: white;box-shadow:0px 0px 15px 0px rgba(0,0,0,0.15);width: 200px;height: 1080px">
+            <el-aside
+                    style="background-color: white;box-shadow:0px 0px 15px 0px rgba(0,0,0,0.15);width: 200px;height: 1080px">
                 <div style="cursor: pointer;font-size: 20px; font-weight: bolder; color: black;line-height:90px;"
                      @click="goToHome()">校车管理后台
                 </div>
@@ -12,7 +13,9 @@
                          :default-active="filterParentPath($route.path)"
                          active-text-color="#1875F0"
                          @select="handleSelect">
-                    <el-menu-item v-for="sub in root.children" v-if="!root.hidden && showMenu(sub.path)" :index="sub.path" style=" height: 120px;line-height: 120px;text-align: center;padding-left: 0px">
+                    <el-menu-item v-for="sub in root.children" v-if="!root.hidden && showMenu(sub.path)"
+                                  :index="sub.path"
+                                  style=" height: 120px;line-height: 120px;text-align: center;padding-left: 0px">
                         <template slot="title">
                             <i :class="sub.icon" style="width: 24px;font-size: 24px"></i>
                             <span style="font-weight: bold;font-size: 16px">{{sub.meta}}</span>
@@ -25,11 +28,11 @@
                     <el-row style="margin-top: 10px">
                         <el-col :offset="22" :span="1">
                             <div>
-                               <img style=" height: 60px;width:60px; border-radius: 50%;align-items: center;justify-content: center;
+                                <img style=" height: 60px;width:60px; border-radius: 50%;align-items: center;justify-content: center;
                                     overflow: hidden;" :src="getPhoto()"/>
                             </div>
                         </el-col>
-                        <el-col   :span="1">
+                        <el-col :span="1">
                             <label
                                     style="font-size: 18px;
                                     cursor: pointer;
@@ -47,8 +50,8 @@
                 <el-container>
                     <router-view></router-view>
                     <!--<el-menu-item v-for="item in sub.children" :index="item.path"-->
-                                  <!--style="text-align: left;font-size: 14px; font-weight: bold">-->
-                        <!--{{item.meta}}-->
+                    <!--style="text-align: left;font-size: 14px; font-weight: bold">-->
+                    <!--{{item.meta}}-->
                     <!--</el-menu-item>-->
                 </el-container>
             </el-container>
@@ -245,7 +248,8 @@
 
             },
             onConfirmLogOut: function () {
-                //sessionStorage.removeItem('user');
+                sessionStorage.removeItem('user');
+                sessionStorage.removeItem('scope');
                 _this.$router.push("/login");
             },
 
@@ -254,19 +258,21 @@
             },
 
             //根据子路径找到父路径
-            filterParentPath(childPath) {
+            filterParentPath(childPath, roleId) {
                 let path = "/home";//default
-                for (let i = 0; i < _this.$router.options.routes.length; i++) {
-                    if (!_this.$router.options.routes[i].hidden && _this.$router.options.routes[i].children.length > 0) {
-                        for (let j = 0; j < _this.$router.options.routes[i].children.length; j++) {
-                            if (childPath.indexOf(_this.$router.options.routes[i].children[j].path) != -1) {
-                                path = _this.$router.options.routes[i].children[j].path;
-                                break;
+                    for (let i = 0; i < _this.$router.options.routes.length; i++) {
+                        if (!_this.$router.options.routes[i].hidden && _this.$router.options.routes[i].children.length > 0) {
+                            for (let j = 0; j < _this.$router.options.routes[i].children.length; j++) {
+                                if (childPath.indexOf(_this.$router.options.routes[i].children[j].path) != -1) {
+                                    path = _this.$router.options.routes[i].children[j].path;
+
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-                return path;
+                    return path;
+
             },
 
             //是否显示主menu
@@ -289,7 +295,7 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
-                            sessionStorage.setItem("scope", data.data.roleScope);
+                            //sessionStorage.setItem("scope", data.data.roleScope);
                         } else {
                             showMessage(_this, data.message, 0);
                         }
@@ -305,6 +311,7 @@
         computed: {},
         filters: {},
         created: function () {
+
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
             this.fetchUserRoleScope(this.userinfo.roleId);
 
@@ -348,7 +355,7 @@
     }
 
     .el-tree-node__expand-icon {
-      font-size: 18px;
+        font-size: 18px;
     }
 
     .el-tree-node__expand-icon.expanded {

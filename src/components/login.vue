@@ -101,7 +101,7 @@
                         _this.isError = res.data.code != 200;
                         if (!_this.isError) {
                             sessionStorage.setItem('user', JSON.stringify(res.data.data));//res.data
-                            _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
+                           _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
                             _this.$router.push("/home");
                         }
                         else {
@@ -121,7 +121,7 @@
                     data: {"id": roleId},
                     success: function (data) {
                         if (data.code == 200) {
-                            _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                            //_this.currentUserRoleScope = JSON.parse(data.data.roleScope);
                             sessionStorage.setItem("scope", data.data.roleScope);
                         } else {
                             showMessage(_this, data.message, 0);
@@ -132,6 +132,23 @@
                     }
                 })
             },
+
+            fetchRoleId(id){
+                let params=new URLSearchParams();
+                params.append('id',id);
+                request({
+                    url:HOST+'user/detail',
+                    method: 'post',
+                    data:params
+                }).then(res=>{
+                    sessionStorage.setItem("user",JSON.stringify(res.data.data))
+                    let roleId=res.data.data.roleId
+                    _this.fetchUserRoleScope(roleId)
+                }).catch(error=>{
+                    showMessage(error)
+                })
+            },
+
             onkeydown: function (e) {
                 var ev = document.all ? window.event : e;
                 if (ev.keyCode == 13) {//enter key
@@ -141,7 +158,7 @@
             },
         },
         mounted: function () {
-        /*window.addEventListener('keydown', _this.onkeydown);
+            window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
                 _this.$router.push("/home");
@@ -149,7 +166,6 @@
             let url=window.location.href;
             console.log(url);
             let mark1= url.indexOf('?');
-
             if(mark1!=-1) {
                 let mark2= url.indexOf('#');
                 let params;
@@ -171,11 +187,12 @@
                     },
                     success: function (data) {
                         if(data.code==200){
-                            sessionStorage.setItem('user', JSON.stringify(data.data));//res.data
-                            //setToken(JSON.stringify(res.data.data))
+                            //sessionStorage.setItem('user', JSON.stringify(data.data));//res.data
+                           // _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
+                            _this.fetchRoleId(data.data.chargeTeacher)
                             _this.$router.push("/home");
                         }else{
-                            console.log("获取登陆用户数据失败！")
+                            showMessage(_this,'获取登陆用户数据失败！',0)
                         }
                     },
                     error: function (error) {
@@ -185,7 +202,7 @@
                 });
             }else {
                 window.location.href=IP;
-            }*/
+            }
         },
         destroyed: function () {
             console.log("destroyed vue");

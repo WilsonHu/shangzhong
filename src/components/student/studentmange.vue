@@ -791,6 +791,7 @@
                             confirmButtonText: '确定',
                             callback: action => {
                                 _this.changeDialogVisible = false;
+                                _this.modify();
                             }
                         })
                     } else {
@@ -1271,7 +1272,7 @@
             _this.getBusList();
             _this.fetchStations();
             _this.fetchStudents();
-        }
+        },
     }
 </script>
 <style>

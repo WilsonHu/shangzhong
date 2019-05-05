@@ -174,6 +174,11 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+                <el-col :span="8">
+                    <el-form-item label="学校账号：" :label-width="formLabelWidth">
+                        <el-input v-model="form.schoolStaffCode" @change="onChange"></el-input>
+                    </el-form-item>
+                </el-col>
             </el-form>
             <el-alert v-if="isError" style="margin-top: 10px;padding: 5px;"
                       :title="errorMsg"
@@ -182,7 +187,7 @@
                       show-icon>
             </el-alert>
             <div slot="footer" class="dialog-footer" style="margin-bottom: 20px">
-                <el-button @click="addDialogVisible = false" icon="el-icon-close" type="danger">取 消</el-button>
+                <el-button @click="handleExit" icon="el-icon-close" type="danger">取 消</el-button>
                 <el-button type="primary" @click="onAdd" icon="el-icon-check">确 定</el-button>
             </div>
         </el-dialog>
@@ -293,7 +298,8 @@
                     name: "",
                     password: null,
                     roleId: "",
-                    valid: ""
+                    valid: "",
+
                 },
                 filters: {
                     name: "",
@@ -428,6 +434,7 @@
                     }).then(res => {
                         if (res.data.code == 200) {
                             showMessage(_this, '添加成功',1)
+                             _this.form={}
                             _this.addDialogVisible = false;
                         } else {
                             _this.isError = true;
@@ -436,27 +443,12 @@
                     }).catch(error => {
                         _this.errorMsg = '服务器访问出错！';
                     })
-                    /*    $.ajax({
-                            url: HOST + "user/add",
-                            type: 'POST',
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            data: JSON.stringify(_this.form),
-                            success: function (data) {
-                                if (data.code == 200) {
-                                    _this.onSelectUsers();
-                                    _this.addDialogVisible = false;
-                                    showMessage(_this, '添加成功', 1);
-                                } else {
-                                    _this.isError = true;
-                                    _this.errorMsg = data.message;
-                                }
-                            },
-                            error: function (data) {
-                                _this.errorMsg = '服务器访问出错！';
-                            }
-                        })*/
                 }
+
+            },
+            handleExit(){
+                _this.form={}
+                _this.addDialogVisible=false;
 
             },
             onClose() {

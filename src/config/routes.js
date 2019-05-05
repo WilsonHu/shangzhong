@@ -52,7 +52,7 @@ export default
 				name: 'DataManage',
 				icon: 'el-icon-menu',
                 hidden: false,
-				redirect: '/home/datamanage/databus',
+
 				meta: "数据管理",
 				children: [
 					{
@@ -82,7 +82,7 @@ export default
 				meta: "校车管理",
 				icon: 'el-icon-date',
 				hidden: false,
-				redirect: '/home/schoolbus/busmanage',
+
 				children: [
 					{
 						path: '/home/schoolbus/busmanage',
@@ -121,7 +121,7 @@ export default
 				component: Student,
 				name: 'Student',
 				icon: 'el-icon-news',
-				redirect: '/home/student/studentmange',
+
 				meta: "学生管理",
                 hidden: false,
 				children: [
@@ -144,7 +144,7 @@ export default
 				component: System,
 				name: 'System',
 				icon: 'el-icon-setting',
-				redirect: '/home/system/user_manage',
+
 				meta: "系统管理",
 				hidden: false,
 				children: [

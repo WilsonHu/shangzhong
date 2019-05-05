@@ -371,18 +371,22 @@
             getPlanedStudents() {
                 let params = new URLSearchParams();
                 request({
-                    url: '/student/totalPlatformNumber',
+                    url: '/student/getStudents',
                     method: 'post',
                     data: params
                 }).then(res => {
                     if (res.data.code == 200) {
-                        _this.planedStudents = res.data.data;
+                        _this.planedStudents = res.data.data.total;
+                        _this.getMorningAbsentStudents();
+                        _this.getAfternoonAbsentStudents();
+                        _this.getNightStudents();
+
                     } else {
-                        showMessage(_this, "获取计划乘坐人数失败！");
+                        showMessage(_this, "获取计划乘坐人数失败！",0);
                     }
 
                 }).catch(error => {
-                    console.log(error)
+                   showMessage(_this,"获取总人数接口内部错误，请联系管理员",0)
 
                 })
             },
@@ -404,6 +408,7 @@
                     if (res.data.code == 200) {
                         _this.morningAbsentList = res.data.data;
                         if (_this.morningAbsentList.length>0) {
+                            console.log("上学乘车人数:"+_this.planedStudents)
                             var num = (_this.morningAbsentList.length / _this.planedStudents)
                             var morningNum = (1 - num) * 100;
                             _this.percentageMorning=morningNum;
@@ -536,23 +541,17 @@
         },
         created: function () {
 
-
         },
         mounted: function () {
             _this.loadingUI = true;
             _this.getPlanedStudents();
-            _this.getMorningAbsentStudents();
-            _this.getAfternoonAbsentStudents();
-            _this.getNightStudents();
             _this.getBusInfo();
+
+
         }
     }
 </script>
 <style>
-    /*tr {*/
-    /*border: #bfcbd9 1px solid;*/
-    /*text-align: center*/
-    /*}*/
     td {
         border: #bfcbd9 1px solid;
         text-align: center

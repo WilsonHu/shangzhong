@@ -1,6 +1,7 @@
 //Server root address
-var IP = "http://127.0.0.1:8080/";
-//var HOST = "http://47.101.141.182/shzx_api/";
+//var IP = "http://10.250.62.200:9090/shzx_cas/demo";
+var IP="http://127.0.0.1:9090/demo"
+//var IP="http://127.0.0.1:8080"
 //var HOST=IP;
 var HOST = "http://211.144.105.121/shzx_api/";
 var DOWNLOADPATH = IP + "/oll/";
