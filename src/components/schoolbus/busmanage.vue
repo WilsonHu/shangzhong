@@ -82,13 +82,11 @@
                     <el-table-column
                             align="center"
                             prop="number"
-
                             label="校车" >
                     </el-table-column >
                     <el-table-column
                             align="center"
                             prop="plateNumber"
-
                             label="车牌" >
                     </el-table-column >
                     <el-table-column
@@ -585,6 +583,7 @@
 				    page: _this.currentPage,
 				    size: _this.pageSize,
 				    schoolPartition: _this.regionData.selectName,
+                    busDriverAccount:_this.queryKey
 			    }
 			    if (condition) {
 				    let keys = Object.keys(condition);

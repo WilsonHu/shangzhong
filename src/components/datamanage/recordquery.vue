@@ -97,7 +97,6 @@
                         v-loading="loadingUI"
                         element-loading-text="获取数据中..."
                         :data="tableData"
-                        :default-sort="{prop: 'boardTime', order: 'descending'}"
                         border
                         highlight-current-row
                         empty-text="暂无数据..."
@@ -111,7 +110,7 @@
                     <el-table-column
                             align="center"
                             prop="boardTime"
-                            sortable
+
                             label="时间">
                         <template scope="scope">
                             <div>
@@ -123,7 +122,6 @@
                             align="center"
                             prop="busNumber"
                             label="校车">
-
                         <template scope="scope">
                             <div>
                                 {{scope.row.busNumber}}
@@ -132,7 +130,6 @@
                     </el-table-column>
                     <el-table-column label="站点"
                                      align="center"
-                                     sortable
                                      prop="stationName">
                         <template scope="scope">
                             <div>
@@ -143,19 +140,18 @@
                     <el-table-column
                             align="center"
                             prop="studentBanji"
-                            sortable
+
                             label="班级">
                     </el-table-column>
                     <el-table-column
                             align="center"
                             prop="studentName"
-                            sortable
+
                             label="姓名">
                     </el-table-column>
                     <el-table-column
                             align="center"
                             prop="mode"
-                            sortable
                             label="状态">
                         <template scope="scope">
                             <div>

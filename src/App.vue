@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <router-view class="router-view"></router-view>
+        <router-view class="router-view" v-if="isRouterAlive"></router-view>
     </div>
 </template>
 
@@ -9,10 +9,24 @@
         debug: true,
         name: 'app',
         data () {
-            return {}
+            return {
+                isRouterAlive:true
+            }
+        },
+        provide(){
+            return {
+                reload:this.reload
+            }
         },
 
-        methods: {}
+        methods: {
+            reload(){
+                this.isRouterAlive=false;
+                this.$nextTick(function () {
+                    this.isRouterAlive=true
+                })
+            }
+        }
     }
 </script>
 <style>

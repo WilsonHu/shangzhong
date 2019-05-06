@@ -250,6 +250,7 @@
             onConfirmLogOut: function () {
                 sessionStorage.removeItem('user');
                 sessionStorage.removeItem('scope');
+
                 _this.$router.push("/login");
             },
 
@@ -265,7 +266,6 @@
                             for (let j = 0; j < _this.$router.options.routes[i].children.length; j++) {
                                 if (childPath.indexOf(_this.$router.options.routes[i].children[j].path) != -1) {
                                     path = _this.$router.options.routes[i].children[j].path;
-
                                     break;
                                 }
                             }
@@ -295,7 +295,6 @@
                     success: function (data) {
                         if (data.code == 200) {
                             _this.currentUserRoleScope = JSON.parse(data.data.roleScope);
-                            //sessionStorage.setItem("scope", data.data.roleScope);
                         } else {
                             showMessage(_this, data.message, 0);
                         }

@@ -101,10 +101,9 @@
                         _this.isError = res.data.code != 200;
                         if (!_this.isError) {
                             sessionStorage.setItem('user', JSON.stringify(res.data.data));//res.data
-                           _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
+                            _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
                             _this.$router.push("/home");
-                        }
-                        else {
+                        } else {
                             _this.errorMsg = res.data.message;// '请输入正确的用户名和密码！'
                         }
                     }).catch((error => {
@@ -121,8 +120,9 @@
                     data: {"id": roleId},
                     success: function (data) {
                         if (data.code == 200) {
-                            //_this.currentUserRoleScope = JSON.parse(data.data.roleScope);
+                        
                             sessionStorage.setItem("scope", data.data.roleScope);
+
                         } else {
                             showMessage(_this, data.message, 0);
                         }
@@ -133,21 +133,6 @@
                 })
             },
 
-            fetchRoleId(id){
-                let params=new URLSearchParams();
-                params.append('id',id);
-                request({
-                    url:HOST+'user/detail',
-                    method: 'post',
-                    data:params
-                }).then(res=>{
-                    sessionStorage.setItem("user",JSON.stringify(res.data.data))
-                    let roleId=res.data.data.roleId
-                    _this.fetchUserRoleScope(roleId)
-                }).catch(error=>{
-                    showMessage(error)
-                })
-            },
 
             onkeydown: function (e) {
                 var ev = document.all ? window.event : e;
@@ -158,41 +143,42 @@
             },
         },
         mounted: function () {
-            window.addEventListener('keydown', _this.onkeydown);
+            // 不要CAS认证时，注释掉此处。并将api.js中的IP端口为9090注释掉
+          /*  window.addEventListener('keydown', _this.onkeydown);
             let user = JSON.parse(sessionStorage.getItem('user'));
             if (user != null) {
                 _this.$router.push("/home");
             }
-            let url=window.location.href;
+            let url = window.location.href;
             console.log(url);
-            let mark1= url.indexOf('?');
-            if(mark1!=-1) {
-                let mark2= url.indexOf('#');
+            let mark1 = url.indexOf('?');
+            if (mark1 != -1) {
+                let mark2 = url.indexOf('#');
                 let params;
                 if (mark2 != -1) {
                     params = url.slice(url.indexOf('?') + 1, mark2);
                 } else {
                     params = url.slice(url.indexOf('?') + 1);
                 }
-                let mark3= params.indexOf('=');
+                let mark3 = params.indexOf('=');
                 console.log(params);
-                let ticket = params.slice(mark3+1);
+                let ticket = params.slice(mark3 + 1);
                 console.log(ticket);
                 $.ajax({
                     url: HOST + "user/ShzxCASLogin",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        "shzxStaffCode":ticket
+                        "shzxStaffCode": ticket
                     },
                     success: function (data) {
-                        if(data.code==200){
-                            //sessionStorage.setItem('user', JSON.stringify(data.data));//res.data
-                           // _this.fetchUserRoleScope(JSON.stringify(res.data.data.roleId))
-                            _this.fetchRoleId(data.data.chargeTeacher)
+                        if (data.code == 200) {
+                            sessionStorage.setItem('user', JSON.stringify(data.data));//res.data
+                            _this.fetchUserRoleScope(data.data.roleId)
+                             console.log("获取的roleId:"+data.data.roleId)
                             _this.$router.push("/home");
-                        }else{
-                            showMessage(_this,'获取登陆用户数据失败！',0)
+                        } else {
+                            showMessage(_this, '获取登陆用户数据失败！', 0)
                         }
                     },
                     error: function (error) {
@@ -200,13 +186,13 @@
                         showMessage(_this, error, 0);
                     }
                 });
-            }else {
-                window.location.href=IP;
-            }
+            } else {
+                window.location.href = IP;
+            }*/
         },
         destroyed: function () {
             console.log("destroyed vue");
-            window.removeEventListener('keydown', _this.onkeydown);
+             window.removeEventListener('keydown', _this.onkeydown);
 
         },
     }

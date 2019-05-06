@@ -515,6 +515,7 @@
                 }).catch(error => {
                     console.log(error)
                 })
+
             },
             selectAbsent() {
                 this.getMorningAbsentStudents();
@@ -539,6 +540,7 @@
                 return parseFloat(realVal)
             }
         },
+
         created: function () {
 
         },
@@ -546,6 +548,7 @@
             _this.loadingUI = true;
             _this.getPlanedStudents();
             _this.getBusInfo();
+
 
 
         }

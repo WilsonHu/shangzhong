@@ -151,7 +151,7 @@
                 </el-pagination>
             </el-col>
         </el-row>
-        <el-dialog :visible.sync="modifyDialogVisible" width="55%">
+        <el-dialog :visible.sync="modifyDialogVisible" width="55%" style="height: 100%">
             <el-row>
                 <el-col :span="4">
                     <el-menu :default-active="activeIndex" style="min-height: 400px" @select="handleStuSelect">
@@ -323,19 +323,22 @@
                 <el-col :span="19" :offset="1">
                     <div v-show="activeIndex == '3'">
                         <h4>预约变更</h4>
-                        <el-form :model="modifyForm" label-position="top">
-                            <el-row style="margin-top: 10px">
+                        <el-form :model="modifyForm" label-position="top" style="margin-left: 50px">
+                            <el-row style="margin-top: 5px">
                                 <el-col :span="7">
                                     <el-form-item label="学号：">
                                         <el-input v-model="modifyForm.studentNumber" :disabled="true"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="1">
+                                <el-col :span="7" :offset="4">
                                     <el-form-item label="姓名：">
                                         <el-input v-model="modifyForm.name" :disabled="true"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="5" :offset="1">
+
+                            </el-row>
+                            <el-row>
+                                <el-col :span="5">
                                     <el-form-item label="班级：">
                                         <el-select v-model="modifyForm.banji" disabled clearable style="width: 140%">
                                             <el-option
@@ -346,13 +349,10 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                            </el-row>
-                            <el-row>
-
-                                <el-col :span="7">
+                                <el-col :span="5" :offset="6">
                                     <el-form-item label="原校车：">
                                         <el-select v-model="modifyForm.busNumber" @change="" disabled clearable
-                                                   filterable style="width: 140%">
+                                                   filterable style="width: 140%;">
                                             <el-option
                                                     v-for="item in busList"
                                                     v-bind:value="item.number"
@@ -361,11 +361,22 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-
-                                <el-col :span="7" :offset="5">
+                            </el-row>
+                            <el-row>
+                                <el-col :span="5">
+                                    <el-form-item label="变更日期：">
+                                        <el-date-picker
+                                                v-model="changeForm.changeTime"
+                                                type="date"
+                                                :picker-options="pickerOptions"
+                                                placeholder="选择日期">
+                                        </el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="5" :offset="6">
                                     <el-form-item label="新校车：">
                                         <el-select v-model="changeForm.busNumber" @change="onAddBusChange" clearable
-                                                   filterable style="width: 140%;margin-left: 10px">
+                                                   filterable style="width: 140%;">
                                             <el-option
                                                     v-for="item in busList"
                                                     v-bind:value="item.number"
@@ -379,9 +390,20 @@
 
                             </el-row>
                             <el-row>
-                                <el-col :span="10">
+                                <el-col :span="5">
                                     <el-form-item label="上学接送点：">
-                                        <el-select v-model="form.boardStationMorning" clearable style="width: 140%">
+                                        <el-select v-model="form.boardStationMorning" clearable style="width: 140%;">
+                                            <el-option
+                                                    v-for="item in busStations"
+                                                    v-bind:value="item.id"
+                                                    v-bind:label="item.stationName">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="5" :offset="6">
+                                    <el-form-item label="放学下车点：">
+                                        <el-select v-model="form.boardStationAfternoon" clearable style="width: 140%;">
                                             <el-option
                                                     v-for="item in busStations"
                                                     v-bind:value="item.id"
@@ -391,25 +413,19 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-row>
-                                <el-col :span="10">
-                                    <el-form-item label="放学下车点：">
-                                        <el-select v-model="form.boardStationAfternoon" clearable style="width: 140%">
-                                            <el-option
-                                                    v-for="item in busStations"
-                                                    v-bind:value="item.id"
-                                                    v-bind:label="item.stationName">
-                                            </el-option>
-                                        </el-select>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="18">
+                                    <el-form-item label="变更内容：">
+                                        <el-input type="textarea" v-model="changeForm.details" rows="5"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                         </el-form>
                         <el-row style="margin-top: 20px">
-                            <el-col :span="15" :offset="2">
+                            <el-col :span="15" :offset="4">
                                 <el-button @click="modify" icon="el-icon-close" type="danger">取 消
                                 </el-button>
-                                <el-button type="primary" @click="changeContent" icon="el-icon-check"
+                                <el-button type="primary" @click="onAddRecord" icon="el-icon-check"
                                            style="margin-left: 150px">提 交
                                 </el-button>
                             </el-col>
@@ -524,66 +540,6 @@
                 <el-button type="primary" @click="onConfirmDelete" icon="el-icon-check">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog :visible.sync="changeDialogVisible" width="60%">
-            <el-row>
-                <el-col :span="22" :offset="1">
-                    <h4>变更内容</h4>
-                    <el-form :model="changeForm" label-position="top" style="margin-left: 180px">
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="7">
-                                <el-form-item label="变更日期：">
-                                    <el-date-picker
-                                            v-model="changeForm.changeTime"
-                                            type="date"
-                                            placeholder="选择日期">
-                                    </el-date-picker>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="7" :offset="1">
-                                <el-form-item label="学生姓名：">
-                                    <el-input v-model="changeForm.name"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="7">
-                                <el-form-item label="原校车：">
-                                    <el-input v-model="changeForm.oldbusNumber"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="7" :offset="1">
-                                <el-form-item label="新校车：">
-                                    <el-input v-model="changeForm.newbusNumber"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="15">
-                                <el-form-item label="新站点：">
-                                    <el-input v-model="changeForm.stationName"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="15">
-                                <el-form-item label="变更内容：">
-                                    <el-input type="textarea" v-model="changeForm.details" rows="5"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                    </el-form>
-                    <el-row style="margin-top: 20px">
-                        <el-col :span="13" :offset="6">
-                            <el-button @click="changeDialogVisible = false" icon="el-icon-close" type="danger">取 消
-                            </el-button>
-                            <el-button type="primary" @click="onAddRecord" icon="el-icon-check"
-                                       style="margin-left: 150px">提 交
-                            </el-button>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </el-dialog>
     </div>
 
 </template>
@@ -660,15 +616,23 @@
                 stuGuardian: {
                     family: '',
                     familyPhone: ''
+                },
+                pickerOptions: {
+                    disabledDate: (time) => {
+                        return _this.dealDisabledDate(time);
+                    }
                 }
 
             }
         },
         methods: {
+            dealDisabledDate(time) {
+                return time.getTime() < Date.now();
+            },
             modify() {
                 _this.changeForm = {};
-                _this.form.boardStationMorning='';
-                _this.form.boardStationAfternoon=''
+                _this.form.boardStationMorning = '';
+                _this.form.boardStationAfternoon = ''
                 _this.modifyDialogVisible = false;
 
             },
@@ -731,20 +695,6 @@
                 _this.form.busNumber = newBusNumber;
                 _this.fetchBusLine(newBusNumber);
             },
-            changeContent() {
-                if (_this.changeForm.busNumber == "" || _this.changeForm.busNumber == null) {
-                    this.$alert('请选择要变更的校车', '提示', {
-                        confirmButtonText: '确定'
-                    })
-                } else {
-                    _this.changeForm.name = _this.modifyForm.name;
-                    _this.changeForm.oldbusNumber = _this.modifyForm.busNumber;
-                    _this.changeForm.newbusNumber = _this.form.busNumber;
-                    _this.fetchBusStation(_this.form.boardStationAfternoon)
-                    _this.modifyDialogVisible = false;
-                    _this.changeDialogVisible = true;
-                }
-            },
             fetchBusStation(boardStationNum) {
                 let params = new URLSearchParams();
                 params.append("id", boardStationNum)
@@ -762,45 +712,50 @@
                 })
             },
             onAddRecord() {
-                let newLine = _this.allBusLine[0].id;
-                let changeForm = {
-                    changeDate: _this.changeForm.changeTime,
-                    student: _this.modifyForm.id,
-                    oldBusLine: _this.modifyForm.busLineMorning,
-                    newBusLine: newLine,
-                    newStation: _this.form.boardStationAfternoon,
-                    changeContent: _this.changeForm.details,
-                    confirmStatus: '0',
-                    createTime: new Date(),
-                    updateTime: new Date()
-                }
-                let params = new URLSearchParams();
-                if (changeForm) {
-                    let keys = Object.keys(changeForm)
-                    for (let key of keys) {
-                        params.append(key, changeForm[key])
+                if (_this.changeForm.changeTime == "" || _this.changeForm.changeTime == null) {
+                    _this.$alert('请选择变更时间！', '提示', {
+                        confirmButtonText: '确定'
+                    })
+                } else {
+                    let newLine = _this.allBusLine[0].id;
+                    let changeForm = {
+                        changeDate: _this.changeForm.changeTime,
+                        student: _this.modifyForm.id,
+                        oldBusLine: _this.modifyForm.busLineMorning,
+                        newBusLine: newLine,
+                        newStation: _this.form.boardStationAfternoon,
+                        changeContent: _this.changeForm.details,
+                        confirmStatus: '0',
+                        createTime: new Date(),
+                        updateTime: new Date()
                     }
-                }
-                request({
-                    url: `${HOST}booking/record/add`,
-                    method: 'post',
-                    data: params
-                }).then(res => {
-                    if (res.data.code == 200) {
-                        _this.$alert('新增成功,请到变更列表中查看您变更的信息', '提示', {
-                            confirmButtonText: '确定',
-                            callback: action => {
-                                _this.changeDialogVisible = false;
-                                _this.modify();
-                            }
-                        })
-                    } else {
-                        showMessage(_this, "新增失败")
+                    let params = new URLSearchParams();
+                    if (changeForm) {
+                        let keys = Object.keys(changeForm)
+                        for (let key of keys) {
+                            params.append(key, changeForm[key])
+                        }
                     }
-                }).catch(error => {
-                    showMessage(error)
-                })
-
+                    request({
+                        url: `${HOST}booking/record/add`,
+                        method: 'post',
+                        data: params
+                    }).then(res => {
+                        if (res.data.code == 200) {
+                            _this.$alert('新增成功,请到变更列表中查看您变更的信息', '提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    _this.modifyDialogVisible = false;
+                                    _this.modify();
+                                }
+                            })
+                        } else {
+                            showMessage(_this, "新增失败")
+                        }
+                    }).catch(error => {
+                        showMessage(error)
+                    })
+                }
             },
             handleStuSelect(index) {
                 _this.activeIndex = index;

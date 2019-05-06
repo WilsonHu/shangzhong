@@ -59,8 +59,8 @@
                         if (data.code == 200) {
                             _this.scopeStr = data.data.roleScope;
                              var currentUserRoleScope = JSON.parse(data.data.roleScope);
-                            if(currentUserRoleScope.system.length > 0) {
-                                _this.$router.push(currentUserRoleScope.system[0]);
+                            if(currentUserRoleScope.student.length > 0) {
+                                _this.$router.push(currentUserRoleScope.student[0]);
                             }
                         } else {
                             showMessage(_this, data.message, 0);

@@ -31,6 +31,7 @@
 		    return {
 			    userinfo: {},
 			    activeName: "",
+                scopeStr: ""
 		    }
 	    },
 	    methods: {
@@ -43,8 +44,12 @@
 			    return list.indexOf(item);
 		    },
             subPathExist(path) {
-
+                if (path!=null||path!=""){
                     return _this.scopeStr.indexOf(path) != -1;
+                } else{
+                    return true
+                }
+
             },
             fetchUserRoleScope(roleId) {
                 $.ajax({
@@ -76,7 +81,7 @@
 	    computed: {},
 	    created: function () {
             this.userinfo = JSON.parse(sessionStorage.getItem('user'));
-            this.scopeStr = sessionStorage.getItem("scope");
+            this.fetchUserRoleScope(this.userinfo.roleId);
 	    },
 	    mounted: function () {
 

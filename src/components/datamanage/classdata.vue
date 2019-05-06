@@ -194,10 +194,10 @@
 
             getClasses() {
                 let params = new URLSearchParams();
-                _this.userInfo = JSON.parse(sessionStorage.getItem("user"));
+
                 var url = '';
                 if (_this.userInfo.roleId == 4) {
-                    params.append("chargeTeacher", _this.userInfo.id);
+                    params.append("chargeTeacher", _this.userInfo.chargeTeacher);
                     url = 'banji/list/info';
                 } else {
                     url = 'banji/list';
@@ -465,6 +465,7 @@
                 _this.loadingUI = false;
 
             })*/
+            this.userInfo = JSON.parse(sessionStorage.getItem("user"));
         },
         mounted: function () {
             _this.getClasses();
