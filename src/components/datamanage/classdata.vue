@@ -254,7 +254,7 @@
                     _this.multipleSelection = [];
 
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, "获取班级数据失败,请联系管理员",0);
                 })
             },
             getBusList() {
@@ -270,7 +270,7 @@
                         showMessage(_this, "获取数据失败！");
                     }
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, "获取校车数据失败！请联系管理员",0);
                 })
             },
             changeDate(){
@@ -370,7 +370,7 @@
                     _this.loadingUI = false;
 
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, error,0);
                     _this.loadingUI = false;
 
                 })
@@ -413,7 +413,7 @@
                         showMessage(_this, "获取站点数据失败！");
                     }
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, error);
                 })
             },
 

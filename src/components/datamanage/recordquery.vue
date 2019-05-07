@@ -20,7 +20,7 @@
             <el-row style="margin-top: 10px;">
                 <el-col :span="4">
                     <el-form-item label="">
-                        <el-select v-model="condition.busNumber" clearable filterable placeholder="请选择校车">
+                        <el-select v-model="condition.busNumber" clearable filterable placeholder="请选择校车" @change="onBusChange">
                             <el-option
                                     v-for="item in busList"
                                     :value="item.number"
@@ -151,11 +151,11 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="mode"
+                            prop="flag"
                             label="状态">
                         <template scope="scope">
                             <div>
-                                {{scope.row.mode}}
+                                {{scope.row.flag}}
                             </div>
                         </template>
                     </el-table-column>
@@ -204,8 +204,10 @@
                 pickerOptions: DateRangeOptions,
                 busList: [],
                 busStationList: [],
+                allBusStations:[],
                 gradeList: [],
                 classList: [],
+
 
 
             }
@@ -272,7 +274,7 @@
 
 
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(error)
                     _this.loadingUI = false;
 
                 })
@@ -306,6 +308,57 @@
                   showMessage(_this,'获取班级信息失败',0)
               })
 
+
+            },
+            fetchBusLine(busNumber) {
+                let params = new URLSearchParams();
+                params.append("busNumber", busNumber);
+                request({
+                    url: '/bus/line/getBusLineByBusNumber',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.allBusLine = res.data.data.list;
+                        if (res.data.data.list.length > 0) {
+                            _this.busStationList = [];
+                            let tmpList = res.data.data.list[0].stations.split(",");
+
+                            _this.busStationList =_this.allBusStations.filter(function (item) {
+                                return tmpList.indexOf(item.stationName) !== -1;
+                            });
+                        }
+                    } else {
+                        showMessage(_this, "获取线路数据失败！");
+                    }
+                }).catch(error => {
+                    showMessage(_this, "获取线路数据失败！",0);
+                })
+            },
+            fetchStations() {
+                let params = new URLSearchParams();
+                request({
+                    url: '/bus/stations/search',
+                    method: 'post',
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        _this.allBusStations = res.data.data.list;
+                    } else {
+                        showMessage(_this, "获取站点数据失败！");
+                    }
+                }).catch(error => {
+                    showMessage(_this, "获取站点数据失败！",0);
+                })
+            },
+            onBusChange(newBusNumber) {
+                _this.condition.busStation=""
+                if (newBusNumber==""||newBusNumber==null){
+                    _this.busStationList=[]
+                    _this.getBusStationList();
+                } else{
+                    _this.fetchBusLine(newBusNumber);
+                }
 
             },
             getBusList() {
@@ -381,6 +434,7 @@
         },
         mounted: function () {
             _this.search();
+            _this.fetchStations()
 
         },
         watch: {
@@ -395,7 +449,17 @@
 
                 }
 
-            }
+            },
+           /* 'condition.busNumber':{
+                handler:function () {
+                    if (_this.condition.busNumber!=""&&_this.condition.busNumber!=null){
+                        _this.fetchBusLine(_this.condition.busNumber)
+                    }else {
+                        _this.busStationList=[]
+                        _this.getBusStationList();
+                    }
+                }
+            }*/
         }
     }
 </script>

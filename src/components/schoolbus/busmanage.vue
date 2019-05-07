@@ -361,6 +361,7 @@
                         </el-tabs>
                     </div>
                     <div v-show="activeIndex == '3'">
+                        <div style="color: #909399;font-weight: bold;">该校车学生总数为:<span style="font-size: 16px;font-weight: bold;color:#1875F0">{{totalStudent}}</span>人</div>
                         <el-table
                                 :data="students"
                                 border
@@ -468,7 +469,8 @@
 			    selectedItem: {},
                 morningLineStations:[],
                 afternoonLineStations:[],
-                students:[]
+                students:[],
+                totalStudent:0
 		    }
 	    },
 	    methods: {
@@ -696,6 +698,7 @@
                 }).then(res => {
                     if (res.data.code == 200) {
                         _this.students = res.data.data.list;
+                        _this.totalStudent=res.data.data.total
                     } else {
                         showMessage(_this,"获取学生数据失败！");
                     }

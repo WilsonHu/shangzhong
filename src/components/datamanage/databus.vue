@@ -343,7 +343,7 @@
                         }
                         break;
                 }
-                console.log(index);
+
                 _this.absentList = absentList;
 
                 /*     //只监听班级的点击
@@ -408,7 +408,7 @@
                     if (res.data.code == 200) {
                         _this.morningAbsentList = res.data.data;
                         if (_this.morningAbsentList.length>0) {
-                            console.log("上学乘车人数:"+_this.planedStudents)
+
                             var num = (_this.morningAbsentList.length / _this.planedStudents)
                             var morningNum = (1 - num) * 100;
                             _this.percentageMorning=morningNum;
@@ -476,7 +476,7 @@
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, "获取晚班乘人数失败！",0);
                 })
             },
             getBusInfo() {
@@ -513,7 +513,7 @@
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    console.log(error)
+                    showMessage(_this, "获取获取车辆信息失败！",0);
                 })
 
             },
