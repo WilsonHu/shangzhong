@@ -1044,7 +1044,6 @@
                 _this.photoData = "";
                 _this.currentStudent = data;
                 _this.modifyForm = copyObjectByJSON(data);
-                console.log("学生的基本信息:"+JSON.stringify(_this.modifyForm))
                 _this.modifyDialogVisible = true;
                 _this.activeIndex = "1";
                 _this.fileList = [];

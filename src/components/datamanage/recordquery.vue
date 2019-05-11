@@ -120,11 +120,11 @@
                     </el-table-column>
                     <el-table-column
                             align="center"
-                            prop="busNumber"
+                            prop="busNumberInTR"
                             label="校车">
                         <template scope="scope">
                             <div>
-                                {{scope.row.busNumber}}
+                                {{scope.row.busNumberInTR}}
                             </div>
                         </template>
                     </el-table-column>

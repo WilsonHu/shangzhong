@@ -125,6 +125,29 @@
             </el-row>
         </el-col>
         <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="60%">
+            <el-row>
+                <el-col :span="2" :offset="1">
+                    <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
+                                    overflow: hidden; margin-top: 10px" :src="modifyPhoto(form.headImage)"  v-show="form.headImage != '' || photoData != null"/>
+                </el-col>
+                <el-col :span="6">
+                    <el-upload
+                            action=""
+                            :limit="1"
+                            :multiple="false"
+                            :file-list="fileList"
+                            :show-file-list="true"
+                            accept=".png,.jpg"
+                            :on-change="handlePhotoChange"
+                            :on-remove="handleRemove"
+                            :on-exceed="handleExceed"
+                            :auto-upload="false"
+                            style="margin-top: 25px;margin-left: 20px">
+                        <el-button size="mini" type="primary" plain>上传</el-button>
+                        <div slot="tip" class="el-upload__tip">仅限于PNG/JPG文件，且不超过2M</div>
+                    </el-upload>
+                </el-col>
+            </el-row>
             <el-form :model="form">
 
                 <el-col :span="8">
@@ -193,7 +216,31 @@
         </el-dialog>
 
         <el-dialog title="编辑用户" :visible.sync="modifyDialogVisible" width="60%">
+            <el-row>
+                <el-col :span="2" :offset="1">
+                    <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
+                                    overflow: hidden; margin-top: 10px" :src="modifyPhoto(modifyForm.headImage)"/>
+                </el-col>
+                <el-col :span="6">
+                    <el-upload
+                            action=""
+                            :limit="1"
+                            :multiple="false"
+                            :file-list="fileList"
+                            :show-file-list="true"
+                            accept=".png,.jpg"
+                            :on-change="handlePhotoChange"
+                            :on-remove="handleRemove"
+                            :on-exceed="handleExceed"
+                            :auto-upload="false"
+                            style="margin-top: 25px;margin-left: 20px">
+                        <el-button size="mini" type="primary" plain>更换</el-button>
+                        <div slot="tip" class="el-upload__tip">仅限于PNG/JPG文件，且不超过2M</div>
+                    </el-upload>
+                </el-col>
+            </el-row>
             <el-form :model="modifyForm">
+                <el-row style="margin-top: 10px">
                 <el-col :span="8">
                     <el-form-item label="账号：" :label-width="formLabelWidth">
                         <el-input v-model="modifyForm.account" @change="onChange"
@@ -232,6 +279,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+                </el-row>
             </el-form>
             <el-alert v-if="isError" style="margin-top: 20px;padding: 5px;"
                       :title="errorMsg"
@@ -275,7 +323,7 @@
                 pageSize: EveryPageNum,//每一页的num
                 currentPage: 1,
                 startRow: 1,
-
+                fileList: [],
                 //增加对话框
                 addDialogVisible: false,
                 form: {
@@ -295,12 +343,14 @@
                 modifyForm: {
                     id: '',
                     account: "",
+                    headImage:"",
                     name: "",
                     password: null,
                     roleId: "",
                     valid: "",
 
                 },
+                photoData:"",
                 filters: {
                     name: "",
                     account: "",
@@ -320,7 +370,32 @@
                     _this.isError = _this.validateForm(_this.modifyForm, true);
                 }
             },
-
+            modifyPhoto(img) {
+                if (_this.photoData !== "") {
+                    return _this.photoData;
+                } else {
+                    return encodeURI(USER_IMG_BASE + img);
+                }
+            },
+            handleRemove(file, fileList) {
+                _this.fileList = [];
+                _this.photoData = "";
+            },
+            handleExceed(file, fileList) {
+                showMessage(_this, "请先删除已选择文件!");
+            },
+            handlePhotoChange(file, fileList) {
+                var reader = new FileReader();
+                if (file.size > PHOTO_SIZE_LIMIT) {
+                    showMessage(_this, "文件大小超过2M");
+                } else {
+                    reader.readAsDataURL(file.raw);
+                    reader.onload = function (e) {
+                        // 这个就是base64编码了
+                        _this.photoData = this.result;
+                    }
+                }
+            },
             handleSizeChange(val) {
             },
             handleCurrentChange(val) {
@@ -358,15 +433,16 @@
                 this.addDialogVisible = true;
             },
             handleEdit(index, item) {
+                _this.photoData=""
                 this.isError = false;
                 this.errorMsg = '';
                 this.selectedItem = item;
-
                 this.modifyForm.id = item.id;
                 this.modifyForm.account = item.account;
                 this.modifyForm.name = item.name;
                 this.modifyForm.roleId = item.roleId;
-                //this.modifyForm.password =  "";
+                this.modifyForm.headImage=item.headImage;
+                this.modifyForm.password =  item.password;
                 this.modifyForm.valid = item.valid;
                 this.isError = this.validateForm(this.modifyForm, true);
                 this.modifyDialogVisible = true;
@@ -426,6 +502,7 @@
                 let params = new URLSearchParams();
                 if (!this.isError) {
                     params.append("user",JSON.stringify( _this.form))
+                    params.append("photoData",_this.photoData)
                     request({
                         url: '/user/add',
                         method: 'post',
@@ -457,12 +534,16 @@
             },
             onEidt() {
                 this.isError = this.validateForm(this.modifyForm, true);
+                let params=new URLSearchParams();
                 if (!_this.isError) {
-                    $.ajax({
-                        url: HOST + "user/update",
+                  /*  $.ajax({
+                        url:'/user/update',
                         type: 'POST',
                         dataType: 'json',
-                        data: {"user": JSON.stringify(_this.modifyForm)},
+                        data: {
+                            "user": JSON.stringify(_this.modifyForm),
+                            "photoData":_this.photoData
+                        },
                         success: function (data) {
                             if (data.code == 200) {
                                 _this.modifyDialogVisible = false;
@@ -477,7 +558,29 @@
                             _this.errorMsg = '服务器访问出错！';
                             _this.isError = true;
                         }
+                    })*/
+                  // 此处修改：url:HOST+'user/update'=>'/user/update'。避免HOST为本地或服务器时都不报错
+                    params.append("user",JSON.stringify( _this.modifyForm))
+                    params.append("photoData",_this.photoData)
+                    request({
+                        url: '/user/update',
+                        method: 'post',
+                        dataType: 'json',
+                        data: params
+                    }).then(res => {
+                        if (res.data.code == 200) {
+                            _this.modifyDialogVisible = false;
+                            _this.onSelectUsers();
+                            showMessage(_this, '修改成功', 1);
+                        } else {
+                            _this.errorMsg = data.message;
+                            _this.isError = true;
+                        }
+                    }).catch(error => {
+                        _this.errorMsg = '服务器访问出错！';
+                        _this.isError = true;
                     })
+                
                 }
             },
 
@@ -535,5 +638,7 @@
 
 </script>
 <style>
-
+    input[type=file] {
+        display: none;
+    }
 </style>
