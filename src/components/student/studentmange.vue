@@ -273,18 +273,6 @@
                         <el-form :model="associated" label-position="top" style="margin-left: 50px">
                             <el-row style="margin-top: 10px">
                                 <el-col :span="7">
-                                    <el-form-item label="BUS妈妈：">
-                                        <el-input v-model="associated.busMomName"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="7" :offset="1">
-                                    <el-form-item label="联系方式：">
-                                        <el-input v-model="associated.busMomPhone"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                            <el-row style="margin-top: 10px">
-                                <el-col :span="7">
                                     <el-form-item label="班主任：">
                                         <el-input v-model="associated.teacherName"></el-input>
                                     </el-form-item>
@@ -295,6 +283,19 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="7">
+                                    <el-form-item label="BUS妈妈：">
+                                        <el-input v-model="associated.busMomName"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="7" :offset="1">
+                                    <el-form-item label="联系方式：">
+                                        <el-input v-model="associated.busMomPhone"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+
                             <el-row style="margin-top: 10px">
                                 <el-col :span="7">
                                     <el-form-item label="监护人1：">
@@ -763,7 +764,7 @@
                     _this.associated.family = _this.stuGuardian.family;
                     _this.associated.familyPhone = _this.stuGuardian.familyPhone
                     _this.fetchBusMom(_this.modifyForm.busNumber)
-                    _this.fetchUser(_this.busMom[0].busMom)
+
 
                 }
             },
@@ -1192,6 +1193,7 @@
                 }).then(res => {
                     if (res.data.code == 200) {
                         _this.busMom = res.data.data.list
+                        _this.fetchUser(_this.busMom[0].busMom)
                     }
                 }).catch(error => {
                     showMessage(_this, error)
@@ -1228,6 +1230,16 @@
             _this.fetchStations();
             _this.fetchStudents();
         },
+
+        watch:{
+            addDialogVisible:{
+                handler: function () {
+                    _this.handleRemove()
+                    _this.form = {}
+                }
+
+            }
+        }
     }
 </script>
 <style>

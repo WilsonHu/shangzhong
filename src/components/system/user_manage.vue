@@ -125,10 +125,11 @@
             </el-row>
         </el-col>
         <el-dialog title="增加用户" :visible.sync="addDialogVisible" width="60%">
-            <el-row>
+            <el-row class="addHeadImage">
                 <el-col :span="2" :offset="1">
                     <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
-                                    overflow: hidden; margin-top: 10px" :src="modifyPhoto(form.headImage)"  v-show="form.headImage != '' || photoData != null"/>
+                                    overflow: hidden; margin-top: 10px" :src="modifyPhoto(form.headImage)"
+                         v-show="form.headImage != '' || photoData != null"/>
                 </el-col>
                 <el-col :span="6">
                     <el-upload
@@ -148,7 +149,7 @@
                     </el-upload>
                 </el-col>
             </el-row>
-            <el-form :model="form">
+            <el-form :model="form" style="margin-top: 10px">
 
                 <el-col :span="8">
                     <el-form-item label="账号：" :label-width="formLabelWidth">
@@ -241,44 +242,49 @@
             </el-row>
             <el-form :model="modifyForm">
                 <el-row style="margin-top: 10px">
-                <el-col :span="8">
-                    <el-form-item label="账号：" :label-width="formLabelWidth">
-                        <el-input v-model="modifyForm.account" @change="onChange"
-                                  :disabled="modifyForm.account == 'admin'"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="姓名：" :label-width="formLabelWidth">
-                        <el-input v-model="modifyForm.name" @change="onChange"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="密码：" :label-width="formLabelWidth">
-                        <el-input v-model="modifyForm.password" @change="onChange"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="角色：" :label-width="formLabelWidth">
-                        <el-select v-model="modifyForm.roleId" @change="onChange">
-                            <el-option
-                                    v-for="item in allRoles"
-                                    v-bind:value="item.id"
-                                    v-bind:label="item.roleName">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="在职情况：" :label-width="formLabelWidth">
-                        <el-select v-model="modifyForm.valid" @change="onChange">
-                            <el-option
-                                    v-for="item in valid"
-                                    v-bind:value="item.valid"
-                                    v-bind:label="item.name">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="账号：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.account" @change="onChange"
+                                      :disabled="modifyForm.account == 'admin'"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="姓名：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.name" @change="onChange"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="密码：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.password" @change="onChange"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="手机：" :label-width="formLabelWidth">
+                            <el-input v-model="modifyForm.phone" @change="onChange"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="角色：" :label-width="formLabelWidth">
+                            <el-select v-model="modifyForm.roleId" @change="onChange">
+                                <el-option
+                                        v-for="item in allRoles"
+                                        v-bind:value="item.id"
+                                        v-bind:label="item.roleName">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="在职情况：" :label-width="formLabelWidth">
+                            <el-select v-model="modifyForm.valid" @change="onChange">
+                                <el-option
+                                        v-for="item in valid"
+                                        v-bind:value="item.valid"
+                                        v-bind:label="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
             </el-form>
             <el-alert v-if="isError" style="margin-top: 20px;padding: 5px;"
@@ -328,12 +334,12 @@
                 addDialogVisible: false,
                 form: {
                     account: "",
-                    headImage:"",
+                    headImage: "",
                     name: "",
                     password: "",
-                    phone:"",
+                    phone: "",
                     roleId: "",
-                    schoolStaffCode:"",
+                    schoolStaffCode: "",
                     valid: 1,
                 },
                 formLabelWidth: '100px',
@@ -343,14 +349,14 @@
                 modifyForm: {
                     id: '',
                     account: "",
-                    headImage:"",
+                    headImage: "",
                     name: "",
                     password: null,
                     roleId: "",
                     valid: "",
 
                 },
-                photoData:"",
+                photoData: "",
                 filters: {
                     name: "",
                     account: "",
@@ -369,12 +375,17 @@
                 } else {
                     _this.isError = _this.validateForm(_this.modifyForm, true);
                 }
+                if (_this.form.roleId == 3 || _this.form.roleId == 5) {
+                    $(".addHeadImage").attr("style", " display: block")
+                } else {
+                    $(".addHeadImage").attr("style", " display: none")
+                }
             },
             modifyPhoto(img) {
                 if (_this.photoData !== "") {
                     return _this.photoData;
                 } else {
-                    return encodeURI(USER_IMG_BASE + img);
+                    return USER_IMG_BASE + img;
                 }
             },
             handleRemove(file, fileList) {
@@ -419,7 +430,6 @@
                             _this.totalRecords = data.data.total;
                             _this.tableData = data.data.list;
                             _this.startRow = data.data.startRow;
-
                         }
                     },
                     error: function (data) {
@@ -433,7 +443,7 @@
                 this.addDialogVisible = true;
             },
             handleEdit(index, item) {
-                _this.photoData=""
+                _this.photoData = ""
                 this.isError = false;
                 this.errorMsg = '';
                 this.selectedItem = item;
@@ -441,8 +451,9 @@
                 this.modifyForm.account = item.account;
                 this.modifyForm.name = item.name;
                 this.modifyForm.roleId = item.roleId;
-                this.modifyForm.headImage=item.headImage;
-                this.modifyForm.password =  item.password;
+                this.modifyForm.headImage = item.headImage;
+                this.modifyForm.phone = item.phone
+                this.modifyForm.password = item.password;
                 this.modifyForm.valid = item.valid;
                 this.isError = this.validateForm(this.modifyForm, true);
                 this.modifyDialogVisible = true;
@@ -484,6 +495,15 @@
                     iserror = true;
                     this.errorMsg = '姓名不能为空';
                 }
+                if (!iserror && isStringEmpty(formObj.phone)) {
+                    iserror = true;
+                    this.errorMsg = '手机不能为空';
+
+                } else if (!(/^1[34578]\d{9}$/.test(formObj.phone))) {
+                    iserror = true;
+                    this.errorMsg = '请输入正确的手机号';
+                }
+
                 if (!iserror && formObj.roleId == "") {
                     iserror = true;
                     this.errorMsg = '请选择角色';
@@ -501,8 +521,8 @@
                 this.isError = _this.validateForm(this.form, false);
                 let params = new URLSearchParams();
                 if (!this.isError) {
-                    params.append("user",JSON.stringify( _this.form))
-                    params.append("photoData",_this.photoData)
+                    params.append("user", JSON.stringify(_this.form))
+                    params.append("photoData", _this.photoData)
                     request({
                         url: '/user/add',
                         method: 'post',
@@ -510,9 +530,10 @@
                         data: params
                     }).then(res => {
                         if (res.data.code == 200) {
-                            showMessage(_this, '添加成功',1)
-                             _this.form={}
+                            showMessage(_this, '添加成功', 1)
+                            _this.form = {}
                             _this.addDialogVisible = false;
+                            _this.onSelectUsers();
                         } else {
                             _this.isError = true;
                             _this.errorMsg = data.message;
@@ -523,9 +544,10 @@
                 }
 
             },
-            handleExit(){
-                _this.form={}
-                _this.addDialogVisible=false;
+            handleExit() {
+                _this.form = {}
+                _this.addDialogVisible = false;
+                $(".addHeadImage").attr("style", "display:none")
 
             },
             onClose() {
@@ -534,34 +556,34 @@
             },
             onEidt() {
                 this.isError = this.validateForm(this.modifyForm, true);
-                let params=new URLSearchParams();
+                let params = new URLSearchParams();
                 if (!_this.isError) {
-                  /*  $.ajax({
-                        url:'/user/update',
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            "user": JSON.stringify(_this.modifyForm),
-                            "photoData":_this.photoData
-                        },
-                        success: function (data) {
-                            if (data.code == 200) {
-                                _this.modifyDialogVisible = false;
-                                _this.onSelectUsers();
-                                showMessage(_this, '修改成功', 1);
-                            } else {
-                                _this.errorMsg = data.message;
-                                _this.isError = true;
-                            }
-                        },
-                        error: function (data) {
-                            _this.errorMsg = '服务器访问出错！';
-                            _this.isError = true;
-                        }
-                    })*/
-                  // 此处修改：url:HOST+'user/update'=>'/user/update'。避免HOST为本地或服务器时都不报错
-                    params.append("user",JSON.stringify( _this.modifyForm))
-                    params.append("photoData",_this.photoData)
+                    /*  $.ajax({
+                          url:'/user/update',
+                          type: 'POST',
+                          dataType: 'json',
+                          data: {
+                              "user": JSON.stringify(_this.modifyForm),
+                              "photoData":_this.photoData
+                          },
+                          success: function (data) {
+                              if (data.code == 200) {
+                                  _this.modifyDialogVisible = false;
+                                  _this.onSelectUsers();
+                                  showMessage(_this, '修改成功', 1);
+                              } else {
+                                  _this.errorMsg = data.message;
+                                  _this.isError = true;
+                              }
+                          },
+                          error: function (data) {
+                              _this.errorMsg = '服务器访问出错！';
+                              _this.isError = true;
+                          }
+                      })*/
+                    // 此处修改：url:HOST+'user/update'=>'/user/update'。避免HOST为本地或服务器时都不报错
+                    params.append("user", JSON.stringify(_this.modifyForm))
+                    params.append("photoData", _this.photoData)
                     request({
                         url: '/user/update',
                         method: 'post',
@@ -580,7 +602,7 @@
                         _this.errorMsg = '服务器访问出错！';
                         _this.isError = true;
                     })
-                
+
                 }
             },
 
@@ -626,19 +648,28 @@
         mounted: function () {
             this.onSelectUsers();
         },
-        /*   watch:{
-               modifyDialogVisible:{
-                   handler: function () {
-                       _this.modifyForm.password=''
-                   }
+         watch:{
+                  addDialogVisible:{
+                      handler: function () {
+                          $(".addHeadImage").attr("style","display:none")
+                          if (_this.photoData!=""||_this.photoData!=null||_this.fileList!=""||_this.fileList!=null){
+                              _this.handleRemove()
+                          }
+                          _this.form = {}
+                      }
 
-               }
-           }*/
+                  }
+              }
     }
 
 </script>
 <style>
     input[type=file] {
         display: none;
+    }
+
+    .addHeadImage {
+        display: none;
+
     }
 </style>
