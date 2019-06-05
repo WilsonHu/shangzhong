@@ -189,7 +189,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer" >
               <el-button class="speacial-button" @click="modifyDialogVisible = false"
-                         icon="el-icon-close" >取 消</el-button >
+                         icon="el-icon-close" type="danger">取 消</el-button >
               <el-button type="primary" @click="onUpdateConfirm" icon="el-icon-check" >确 定</el-button >
             </span >
         </el-dialog >

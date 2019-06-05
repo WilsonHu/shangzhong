@@ -407,8 +407,7 @@
                     }
                 }
             },
-            handleSizeChange(val) {
-            },
+            handleSizeChange(val) {},
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.onSelectUsers();

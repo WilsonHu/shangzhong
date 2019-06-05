@@ -110,7 +110,6 @@
                     <el-table-column
                             align="center"
                             prop="boardTime"
-
                             label="时间">
                         <template scope="scope">
                             <div>

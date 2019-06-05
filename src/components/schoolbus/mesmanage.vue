@@ -175,10 +175,10 @@
                                 </el-col>
                             </el-row>
                         </el-form>
-                        <el-row style="margin-top: 20px">
-                            <el-col :span="15" :offset="7">
+                        <el-row>
+                            <el-col :offset="20">
                                 <el-button @click="cancel" icon="el-icon-close" type="danger">取 消</el-button>
-                                <el-button type="primary" @click="onEdit" icon="el-icon-check" style="margin-left: 150px">保存</el-button>
+                                <el-button type="primary" @click="onEdit" icon="el-icon-check">保存</el-button>
                             </el-col>
                         </el-row>
                     </div>

@@ -184,25 +184,33 @@
                 </div>
             </el-col>
         </el-row>
-
         <el-row style="width: 100%;background-color: white;border-color: whitesmoke" class="well">
-            <el-col :span="3" class="well" style="background: white;min-height: 360px;overflow-y: auto">
-                <div style="width: 100%;height:72px; text-align: center;padding-top: 20px">
-                    <span style="font-size:18px;font-weight:bolder;color:rgba(153,153,153,1)">缺乘名单</span>
-                </div>
-                <div style="width: 100%;height: 2px;background-color: whitesmoke"></div>
-                <div style="width: 100%;">
-                    <el-tree
-                            :data="treeData"
-                            :props="defaultProps"
-                            accordion
-                            style="text-align: center"
-                            @node-click="handleNodeClick"
-                            highlight-current>
-                    </el-tree>
-                </div>
+            <el-row>
+                <el-col>
+                    <div>
+                        <span style="font-size:18px;font-weight:bolder;color:rgba(153,153,153,1)">缺乘名单</span>
+                    </div>
+                </el-col>
+            <el-col :span="4" style="margin-top: 5px;">
+                <el-select v-model="busName" clearable filterable placeholder="请选择校车" @change="handleNodeClick" style="margin-left: 6px">
+                    <el-option
+                            v-for="item in treeData"
+                            :value="item.number"
+                            :label="item.number">
+                    </el-option>
+                </el-select>
             </el-col>
-            <el-col :span="21">
+                <el-col :span="4" :offset="1">
+                    <el-select v-model="statusName" clearable filterable placeholder="请选择状态" @change="handleStatusClick">
+                        <el-option
+                                v-for="item in status"
+                                :value="item.id"
+                                :label="item.label">
+                        </el-option>
+                    </el-select>
+                </el-col>
+            </el-row>
+            <el-col>
                 <div style="vertical-align: text-top;padding: 5px;text-align: center">
                     <el-table
                             v-loading="loadingUI"
@@ -220,7 +228,6 @@
                             <template scope="scope">
                                 {{scope.$index+1}}
                             </template>
-                            -->
                         </el-table-column>
 
                         <el-table-column
@@ -229,15 +236,6 @@
                                 sortable
                                 label="学号">
                         </el-table-column>
-                        <!--   <el-table-column
-                                   align="center"
-                                   prop="headImg"
-                                   label="头像">
-                               <template scope="scope">
-                                   <img style=" height: 60px;width:60px; border: solid 2px lightskyblue; border-radius: 50%;align-items: center;justify-content: center;
-                                       overflow: hidden;" :src="scope.row.photo"/>
-                               </template>
-                           </el-table-column>-->
                         <el-table-column label="姓名"
                                          align="center"
                                          sortable
@@ -300,50 +298,60 @@
                 afternoonAbsentList: [],
                 night: '',
                 absentList: [],
-                morning:100,
-                percentageMorning:100,
-                percentageAfternoon:100,
-                afternoon:100
+                morning: 100,
+                percentageMorning: 100,
+                percentageAfternoon: 100,
+                afternoon: 100,
+                busName: '',
+                status: [
+                    {
+                        id: '0',
+                        label: '上学',
+                    },
+                    {
+                        id: '1',
+                        label: '放学',
+                    }
+                ],
+                statusName: ''
             }
         },
         watch: {},
         methods: {
             handleNodeClick(data) {
                 var absentList = new Array();
+                _this.statusName="";
                 var index = 0;
-                switch (data.label) {
-                    case "上学":
+                if (_this.statusName!=""&&_this.statusName!=null){
+                    if (data == 0) {
                         for (var i = 0; i < _this.morningAbsentList.length; i++) {
-                            if (_this.morningAbsentList[i].busNumber == data.id) {
+                            if (_this.morningAbsentList[i].busNumber == _this.busName) {
                                 absentList[index] = _this.morningAbsentList[i];
                                 index++;
                             }
                         }
-                        break;
-                    case "放学":
+                    } else if (data == 1) {
                         for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
-                            if (_this.afternoonAbsentList[i].busNumber == data.id) {
+                            if (_this.afternoonAbsentList[i].busNumber == _this.busName) {
                                 absentList[index] = _this.afternoonAbsentList[i];
                                 index++;
                             }
                         }
-                        break;
-                    default :
-                        for (var i = 0; i < _this.morningAbsentList.length; i++) {
-                            if (_this.morningAbsentList[i].busNumber == data.id) {
-                                absentList[index] = _this.morningAbsentList[i];
-                                index++;
-                            }
+                    }
+                } else {
+                    for (var i = 0; i < _this.morningAbsentList.length; i++) {
+                        if (_this.morningAbsentList[i].busNumber == data) {
+                            absentList[index] = _this.morningAbsentList[i];
+                            index++;
                         }
-                        for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
-                            if (_this.afternoonAbsentList[i].busNumber == data.id) {
-                                absentList[index] = _this.afternoonAbsentList[i];
-                                index++;
-                            }
+                    }
+                    for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
+                        if (_this.afternoonAbsentList[i].busNumber == data) {
+                            absentList[index] = _this.afternoonAbsentList[i];
+                            index++;
                         }
-                        break;
+                    }
                 }
-
                 _this.absentList = absentList;
 
                 /*     //只监听班级的点击
@@ -368,6 +376,35 @@
                          })
                      }*/
             },
+
+            handleStatusClick(data){
+                var absentList = new Array();
+                var index = 0;
+                if (_this.busName!="" &&_this.busName!=null) {
+                    if (data == 0) {
+                        for (var i = 0; i < _this.morningAbsentList.length; i++) {
+                            if (_this.morningAbsentList[i].busNumber == _this.busName) {
+                                absentList[index] = _this.morningAbsentList[i];
+                                index++;
+                            }
+                        }
+                        _this.absentList = absentList;
+                    } else if (data == 1) {
+                        for (var i = 0; i < _this.afternoonAbsentList.length; i++) {
+                            if (_this.afternoonAbsentList[i].busNumber == _this.busName) {
+                                absentList[index] = _this.afternoonAbsentList[i];
+                                index++;
+                            }
+                        }
+                        _this.absentList = absentList;
+                    }else{
+                        _this.absentList=_this.absentList
+                    }
+
+                }else{
+                    showMessage(_this,'请选择校车')
+                }
+            },
             getPlanedStudents() {
                 let params = new URLSearchParams();
                 request({
@@ -382,11 +419,11 @@
                         _this.getNightStudents();
 
                     } else {
-                        showMessage(_this, "获取计划乘坐人数失败！",0);
+                        showMessage(_this, "获取计划乘坐人数失败！", 0);
                     }
 
                 }).catch(error => {
-                   showMessage(_this,"获取总人数接口内部错误，请联系管理员",0)
+                    showMessage(_this, "获取总人数接口内部错误，请联系管理员", 0)
 
                 })
             },
@@ -407,21 +444,21 @@
 
                     if (res.data.code == 200) {
                         _this.morningAbsentList = res.data.data;
-                        if (_this.morningAbsentList.length>0) {
+                        if (_this.morningAbsentList.length > 0) {
 
                             var num = (_this.morningAbsentList.length / _this.planedStudents)
                             var morningNum = (1 - num) * 100;
-                            _this.percentageMorning=morningNum;
+                            _this.percentageMorning = morningNum;
                             _this.morning = morningNum.toFixed(2)
-                        }else{
-                            _this.morning=100
+                        } else {
+                            _this.morning = 100
                         }
                     } else {
                         showMessage(_this, "获取上学缺乘人数失败！");
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                   showMessage(_this,'接口内部错误，请联系管理员',0)
+                    showMessage(_this, '接口内部错误，请联系管理员', 0)
                 })
             },
             getAfternoonAbsentStudents() {
@@ -440,21 +477,21 @@
                 }).then(res => {
                     if (res.data.code == 200) {
                         _this.afternoonAbsentList = res.data.data;
-                          if (_this.afternoonAbsentList.length>0){
-                              var num = (_this.afternoonAbsentList.length / _this.planedStudents)
-                              var afternoonNum = (1 - num) * 100;
-                              _this.percentageAfternoon=afternoonNum
-                              _this.afternoon = afternoonNum.toFixed(2)
-                          } else {
-                              _this.afternoon=100
-                          }
+                        if (_this.afternoonAbsentList.length > 0) {
+                            var num = (_this.afternoonAbsentList.length / _this.planedStudents)
+                            var afternoonNum = (1 - num) * 100;
+                            _this.percentageAfternoon = afternoonNum
+                            _this.afternoon = afternoonNum.toFixed(2)
+                        } else {
+                            _this.afternoon = 100
+                        }
 
                     } else {
-                        showMessage(_this, "获取放学缺乘人数失败！",0);
+                        showMessage(_this, "获取放学缺乘人数失败！", 0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                   showMessage(error)
+                    showMessage(error)
                 })
             },
             getNightStudents() {
@@ -472,11 +509,11 @@
                     if (res.data.code == 200) {
                         _this.night = res.data.data;
                     } else {
-                        showMessage(_this, "获取晚班乘人数失败！",0);
+                        showMessage(_this, "获取晚班乘人数失败！", 0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    showMessage(_this, "获取晚班乘人数失败！",0);
+                    showMessage(_this, "获取晚班乘人数失败！", 0);
                 })
             },
             getBusInfo() {
@@ -507,13 +544,14 @@
                             tree.children = childrenList;
                             treeList[i] = tree;
                         }
-                        _this.treeData = treeList;
+                        _this.treeData = busList;
+
                     } else {
-                        showMessage(_this, "获取获取车辆信息失败！",0);
+                        showMessage(_this, "获取获取车辆信息失败！", 0);
                     }
                     _this.loadingUI = false;
                 }).catch(error => {
-                    showMessage(_this, "获取获取车辆信息失败！",0);
+                    showMessage(_this, "获取获取车辆信息失败！", 0);
                 })
 
             },
@@ -523,14 +561,14 @@
                 this.getNightStudents();
             }
         },
-       /* computed: {
-            morningRidingRate: function () {
-                return ((_this.planedStudents - _this.morningAbsentList.length) * 100) / _this.planedStudents;
-            },
-            afternoonRidingRate: function () {
-                return ((_this.planedStudents - _this.afternoonAbsentList.length) * 100) / _this.planedStudents;
-            }
-        },*/
+        /* computed: {
+             morningRidingRate: function () {
+                 return ((_this.planedStudents - _this.morningAbsentList.length) * 100) / _this.planedStudents;
+             },
+             afternoonRidingRate: function () {
+                 return ((_this.planedStudents - _this.afternoonAbsentList.length) * 100) / _this.planedStudents;
+             }
+         },*/
         filters: {
             numFilter(value) {
                 // 截取当前数据到小数点后两位
@@ -548,7 +586,6 @@
             _this.loadingUI = true;
             _this.getPlanedStudents();
             _this.getBusInfo();
-
 
 
         }
