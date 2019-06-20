@@ -8,6 +8,7 @@
                              :props="defaultProps"
                              highlight-current
                              accordion
+                             @node-expand="handleNodeClick"
                              style="margin-top: 20px"
                              @node-click="handleNodeClick"
                     >
