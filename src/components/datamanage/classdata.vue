@@ -7,9 +7,10 @@
                     <el-tree :data="classArrays"
                              :props="defaultProps"
                              highlight-current
+                             accordion
                              style="margin-top: 20px"
                              @node-click="handleNodeClick"
-                             >
+                    >
                     </el-tree>
                 </div>
             </el-col>
@@ -169,8 +170,9 @@
                         }
                     }]
                 },
-                userInfo:'',
+                userInfo: '',
                 tableData: [],
+                gradeName: null,
                 totalRecords: 0,
                 currentGrade: "",
                 queryKey: "",
@@ -254,7 +256,7 @@
                     _this.multipleSelection = [];
 
                 }).catch(error => {
-                    showMessage(_this, "获取班级数据失败,请联系管理员",0);
+                    showMessage(_this, "获取班级数据失败,请联系管理员", 0);
                 })
             },
             getBusList() {
@@ -270,13 +272,13 @@
                         showMessage(_this, "获取数据失败！");
                     }
                 }).catch(error => {
-                    showMessage(_this, "获取校车数据失败！请联系管理员",0);
+                    showMessage(_this, "获取校车数据失败！请联系管理员", 0);
                 })
             },
-            changeDate(){
-              if (_this.currentGrade.label!=null){
-                  _this.fetchStudents();
-              }
+            changeDate() {
+                if (_this.currentGrade.label != null) {
+                    _this.fetchStudents();
+                }
             },
             handleNodeClick(data) {
                 _this.currentGrade = data;
@@ -284,8 +286,8 @@
                     if (_this.currentGrade.label.indexOf('年级') == -1) {
                         _this.fetchStudents();
                     }
-                }else {
-                    if (_this.currentGrade.label!=null) {
+                } else {
+                    if (_this.currentGrade.label != null) {
                         _this.fetchStudents();
                     }
                 }
@@ -349,8 +351,10 @@
 
                 } else if (_this.currentGrade.label.indexOf("年级") != -1) {
                     params.append("gradeName", _this.currentGrade.label);
+                    _this.gradeName = _this.currentGrade.label;
                 } else {
                     params.append("className", _this.currentGrade.label);
+                    params.append("gradeName",_this.gradeName);
                 }
                 params.append("queryKey", _this.queryKey);
                 params.append("queryStartTime", queryStartTime.getTime() / 1000);
@@ -370,7 +374,7 @@
                     _this.loadingUI = false;
 
                 }).catch(error => {
-                    showMessage(_this, error,0);
+                    showMessage(_this, error, 0);
                     _this.loadingUI = false;
 
                 })
