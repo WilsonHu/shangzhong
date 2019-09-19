@@ -107,15 +107,15 @@
                 </span>
 
         </el-dialog>
-        <div class="modal fade" id="logOutConfirmMsg" role="dialog">
+        <!--<div class="modal fade" id="logOutConfirmMsg" role="dialog">
             <div class="modal-dialog">
-                <!-- Modal content-->
+                &lt;!&ndash; Modal content&ndash;&gt;
                 <div class="modal-content">
                     <div class="modal-header" style="text-align: left">
                         <h3>提示</h3>
                     </div>
                     <div class="modal-body" style="font-size: 18px;font-family: FontAwesome">
-                        <!-- 加上<form>标签可以使得modal窗口在点击按钮都自动dismiss-->
+                        &lt;!&ndash; 加上<form>标签可以使得modal窗口在点击按钮都自动dismiss&ndash;&gt;
                         确认要注销登录吗？
                         <button type="button" style="margin-top: 50px;font-size: 18px" class="btn btn-danger btn-block"
                                 v-on:click="onConfirmLogOut">确 定
@@ -123,7 +123,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 

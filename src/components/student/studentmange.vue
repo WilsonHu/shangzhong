@@ -573,6 +573,20 @@
                     label: 'label'
                 },
                 modifyForm: {},
+                studentForm: {
+                    id: 0,
+                    studentNumber: "",
+                    headImg: "",
+                    name: "",
+                    banji: "",
+                    busLineMorning: "",
+                    busLineAfternoon: "",
+                    boardStationMorning: "",
+                    boardStationAfternoon: "",
+                    familyInfo: "",
+                    createTime: "",
+                    updateTime: "",
+                },
                 changeForm: {
                     changeTime: '',
                     name: '',
@@ -689,6 +703,7 @@
                 _this.modifyForm.boardStationAfternoon = "";
                 _this.modifyForm.busNumber = newBusNumber;
                 _this.fetchBusLine(newBusNumber);
+                _this.getBusLine(newBusNumber);
             },
             onAddBusChange(newBusNumber) {
                 _this.form.boardStationMorning = "";
@@ -1072,11 +1087,13 @@
                         }
                     }
                 }
+
             },
             onEdit() {
+                _this.compyValue();
                 if (_this.verifyForm(_this.modifyForm)) {
                     let params = new URLSearchParams();
-                    params.append("student", JSON.stringify(_this.modifyForm));
+                    params.append("student", JSON.stringify(_this.studentForm));
                     params.append("photoData", _this.photoData);
                     request({
                         url: '/student/update',
@@ -1094,6 +1111,37 @@
                         console.log(error)
                     })
                 }
+            },
+            compyValue() {
+                _this.studentForm.id = _this.modifyForm.id;
+                _this.studentForm.studentNumber = _this.modifyForm.studentNumber;
+                _this.studentForm.headImg = _this.modifyForm.headImg;
+                _this.studentForm.name = _this.modifyForm.name;
+                _this.studentForm.banji = _this.modifyForm.banji;
+                _this.studentForm.boardStationMorning = _this.modifyForm.boardStationMorning;
+                _this.studentForm.boardStationAfternoon = _this.modifyForm.boardStationAfternoon;
+                _this.studentForm.familyInfo = _this.modifyForm.familyInfo;
+                _this.studentForm.createTime = _this.modifyForm.createTime;
+                _this.studentForm.updateTime = _this.modifyForm.updateTime;
+
+
+            },
+            getBusLine(busNum) {
+                let params = new URLSearchParams();
+                params.append("busNumber", _this.modifyForm.busNumber);
+                request({
+                    url: "/bus/line/getBusLineByBusNumber",
+                    method: "post",
+                    data: params
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        let busLine = res.data.data.list;
+                        _this.studentForm.busLineMorning = busLine[0].id;
+                        _this.studentForm.busLineAfternoon = busLine[1].id;
+                    }
+                }).catch(error => {
+                    showMessage(_this, error, 0)
+                })
             },
             handleAdd() {
                 _this.photoData = "";
@@ -1231,8 +1279,8 @@
             _this.fetchStudents();
         },
 
-        watch:{
-            addDialogVisible:{
+        watch: {
+            addDialogVisible: {
                 handler: function () {
                     _this.handleRemove()
                     _this.form = {}
